@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px; margin: 0; }
+        .lang-content { display: none; }
+        h1 { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        h2 { font-size: 18px; font-weight: bold; margin-top: 24px; margin-bottom: 8px; }
+        p { margin-bottom: 10px; }
+        ul { margin-bottom: 10px; padding-left: 20px; }
+        li { margin-bottom: 5px; }
+        .date { color: #888; font-size: 14px; margin-bottom: 24px; }
+        
+        /* RTL Support */
+        [dir="rtl"] { text-align: right; direction: rtl; }
+        [dir="rtl"] ul { padding-right: 20px; padding-left: 0; }
+    </style>
+    <script>
+        function showLanguage(lang) {
+            // Default to 'en' if lang is null or undefined
+            lang = lang || 'en';
+            
+            // Handle cases like 'zh_CN', 'zh-Hans', just take the first part 'zh'
+            // But wait, our file mapping used exact codes. Let's try exact match first, then prefix.
+            // Our supported codes: zh, en, fr, de, pt, es, ar
+            
+            var supported = ['zh', 'en', 'fr', 'de', 'pt', 'es', 'ar'];
+            var targetLang = 'en';
+            
+            if (supported.indexOf(lang) !== -1) {
+                targetLang = lang;
+            } else if (lang.indexOf('_') !== -1 || lang.indexOf('-') !== -1) {
+                 var prefix = lang.split(/[-_]/)[0];
+                 if (supported.indexOf(prefix) !== -1) {
+                     targetLang = prefix;
+                 }
+            }
+
+            // Hide all
+            var contents = document.getElementsByClassName('lang-content');
+            for(var i=0; i<contents.length; i++) {
+                contents[i].style.display = 'none';
+            }
+            
+            // Show target
+            var target = document.getElementById('lang-' + targetLang);
+            if (target) {
+                target.style.display = 'block';
+            } else {
+                // Fallback to en if something went wrong
+                document.getElementById('lang-en').style.display = 'block';
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Chinese (zh) -->
+    <div id="lang-zh" class="lang-content">
+        <h1>隐私政策</h1>
+        <p class="date">生效日期：2024年1月1日</p>
+        <h2>1. 信息收集</h2>
+        <p>“天花排版大师”是一款本地化工具应用。我们承诺：</p>
+        <ul>
+            <li>我们不收集您的任何个人身份信息（PII）。</li>
+            <li>您的所有排版数据、项目文件均存储在您设备的本地存储中。</li>
+            <li>我们没有后台服务器，也不会上传您的数据。</li>
+        </ul>
+        <h2>2. 权限使用</h2>
+        <ul>
+            <li><strong>存储权限：</strong>用于将导出的排版图和材料清单保存到您的相册或文件中。</li>
+            <li><strong>网络权限：</strong>仅用于检查应用更新（如有）。</li>
+        </ul>
+        <h2>3. 第三方服务</h2>
+        <p>本应用可能包含第三方SDK（如Flutter框架本身），它们可能会收集匿名的崩溃日志以帮助改进稳定性，但不会关联到您的个人身份。</p>
+        <h2>4. 联系我们</h2>
+        <p>如果您对本隐私政策有任何疑问，请联系技术支持：support@ceilingmaster.com</p>
+    </div>
+
+    <!-- English (en) -->
+    <div id="lang-en" class="lang-content">
+        <h1>Privacy Policy</h1>
+        <p class="date">Effective Date: January 1, 2024</p>
+        <h2>1. Information Collection</h2>
+        <p>"Ceiling Master" is a local utility application. We commit that:</p>
+        <ul>
+            <li>We do not collect any Personally Identifiable Information (PII).</li>
+            <li>All your layout data and project files are stored locally on your device.</li>
+            <li>We do not have backend servers and do not upload your data.</li>
+        </ul>
+        <h2>2. Permissions Usage</h2>
+        <ul>
+            <li><strong>Storage Permission:</strong> Used to save exported layout images and material lists to your gallery or files.</li>
+            <li><strong>Network Permission:</strong> Only used to check for app updates (if applicable).</li>
+        </ul>
+        <h2>3. Third-Party Services</h2>
+        <p>This app may contain third-party SDKs (such as the Flutter framework itself), which may collect anonymous crash logs to help improve stability, but these are not linked to your personal identity.</p>
+        <h2>4. Contact Us</h2>
+        <p>If you have any questions about this Privacy Policy, please contact technical support: support@ceilingmaster.com</p>
+    </div>
+
+    <!-- French (fr) -->
+    <div id="lang-fr" class="lang-content">
+        <h1>Politique de Confidentialité</h1>
+        <p class="date">Date d'effet : 1er janvier 2024</p>
+        <h2>1. Collecte d'informations</h2>
+        <p>"Ceiling Master" est une application utilitaire locale. Nous nous engageons à ce que :</p>
+        <ul>
+            <li>Nous ne collectons aucune information personnelle identifiable (PII).</li>
+            <li>Toutes vos données de mise en page et fichiers de projet sont stockés localement sur votre appareil.</li>
+            <li>Nous n'avons pas de serveurs backend et ne téléchargeons pas vos données.</li>
+        </ul>
+        <h2>2. Utilisation des permissions</h2>
+        <ul>
+            <li><strong>Permission de stockage :</strong> Utilisée pour enregistrer les images de mise en page exportées et les listes de matériaux dans votre galerie ou vos fichiers.</li>
+            <li><strong>Permission réseau :</strong> Utilisée uniquement pour vérifier les mises à jour de l'application (le cas échéant).</li>
+        </ul>
+        <h2>3. Services tiers</h2>
+        <p>Cette application peut contenir des SDK tiers (tels que le framework Flutter lui-même), qui peuvent collecter des journaux de plantage anonymes pour aider à améliorer la stabilité, mais ceux-ci ne sont pas liés à votre identité personnelle.</p>
+        <h2>4. Nous contacter</h2>
+        <p>Si vous avez des questions concernant cette politique de confidentialité, veuillez contacter le support technique : support@ceilingmaster.com</p>
+    </div>
+
+    <!-- German (de) -->
+    <div id="lang-de" class="lang-content">
+        <h1>Datenschutzerklärung</h1>
+        <p class="date">Gültig ab: 1. Januar 2024</p>
+        <h2>1. Datenerfassung</h2>
+        <p>"Ceiling Master" ist eine lokale Dienstprogramm-Anwendung. Wir verpflichten uns:</p>
+        <ul>
+            <li>Wir erfassen keine personenbezogenen Daten (PII).</li>
+            <li>Alle Ihre Layout-Daten und Projektdateien werden lokal auf Ihrem Gerät gespeichert.</li>
+            <li>Wir haben keine Backend-Server und laden Ihre Daten nicht hoch.</li>
+        </ul>
+        <h2>2. Berechtigungsnutzung</h2>
+        <ul>
+            <li><strong>Speicherberechtigung:</strong> Wird verwendet, um exportierte Layout-Bilder und Materiallisten in Ihrer Galerie oder Ihren Dateien zu speichern.</li>
+            <li><strong>Netzwerkberechtigung:</strong> Wird nur verwendet, um nach App-Updates zu suchen (falls zutreffend).</li>
+        </ul>
+        <h2>3. Dienste von Drittanbietern</h2>
+        <p>Diese App kann SDKs von Drittanbietern enthalten (wie das Flutter-Framework selbst), die anonyme Absturzprotokolle erfassen können, um die Stabilität zu verbessern. Diese sind jedoch nicht mit Ihrer persönlichen Identität verknüpft.</p>
+        <h2>4. Kontaktieren Sie uns</h2>
+        <p>Wenn Sie Fragen zu dieser Datenschutzerklärung haben, wenden Sie sich bitte an den technischen Support: support@ceilingmaster.com</p>
+    </div>
+
+    <!-- Portuguese (pt) -->
+    <div id="lang-pt" class="lang-content">
+        <h1>Política de Privacidade</h1>
+        <p class="date">Data de vigência: 1 de janeiro de 2024</p>
+        <h2>1. Coleta de informações</h2>
+        <p>"Ceiling Master" é um aplicativo utilitário local. Nós nos comprometemos que:</p>
+        <ul>
+            <li>Não coletamos nenhuma informação de identificação pessoal (PII).</li>
+            <li>Todos os seus dados de layout e arquivos de projeto são armazenados localmente no seu dispositivo.</li>
+            <li>Não temos servidores backend e não enviamos seus dados.</li>
+        </ul>
+        <h2>2. Uso de permissões</h2>
+        <ul>
+            <li><strong>Permissão de armazenamento:</strong> Usada para salvar imagens de layout exportadas e listas de materiais em sua galeria ou arquivos.</li>
+            <li><strong>Permissão de rede:</strong> Usada apenas para verificar atualizações do aplicativo (se aplicável).</li>
+        </ul>
+        <h2>3. Serviços de terceiros</h2>
+        <p>Este aplicativo pode conter SDKs de terceiros (como a própria estrutura Flutter), que podem coletar logs de falhas anônimos para ajudar a melhorar a estabilidade, mas estes não estão vinculados à sua identidade pessoal.</p>
+        <h2>4. Contate-nos</h2>
+        <p>Se você tiver alguma dúvida sobre esta Política de Privacidade, entre em contato com o suporte técnico: support@ceilingmaster.com</p>
+    </div>
+
+    <!-- Spanish (es) -->
+    <div id="lang-es" class="lang-content">
+        <h1>Política de Privacidad</h1>
+        <p class="date">Fecha de vigencia: 1 de enero de 2024</p>
+        <h2>1. Recopilación de información</h2>
+        <p>"Ceiling Master" es una aplicación de utilidad local. Nos comprometemos a:</p>
+        <ul>
+            <li>No recopilamos ninguna información de identificación personal (PII).</li>
+            <li>Todos sus datos de diseño y archivos de proyecto se almacenan localmente en su dispositivo.</li>
+            <li>No tenemos servidores backend y no subimos sus datos.</li>
+        </ul>
+        <h2>2. Uso de permisos</h2>
+        <ul>
+            <li><strong>Permiso de almacenamiento:</strong> Se utiliza para guardar imágenes de diseño exportadas y listas de materiales en su galería o archivos.</li>
+            <li><strong>Permiso de red:</strong> Solo se utiliza para buscar actualizaciones de la aplicación (si corresponde).</li>
+        </ul>
+        <h2>3. Servicios de terceros</h2>
+        <p>Esta aplicación puede contener SDK de terceros (como el propio marco Flutter), que pueden recopilar registros de fallos anónimos para ayudar a mejorar la estabilidad, pero estos no están vinculados a su identidad personal.</p>
+        <h2>4. Contáctenos</h2>
+        <p>Si tiene alguna pregunta sobre esta Política de Privacidad, comuníquese con el soporte técnico: support@ceilingmaster.com</p>
+    </div>
+
+    <!-- Arabic (ar) -->
+    <div id="lang-ar" class="lang-content" dir="rtl">
+        <h1>سياسة الخصوصية</h1>
+        <p class="date">تاريخ السريان: 1 يناير 2024</p>
+        <h2>1. جمع المعلومات</h2>
+        <p>"Ceiling Master" هو تطبيق خدمي محلي. نحن نلتزم بما يلي:</p>
+        <ul>
+            <li>نحن لا نجمع أي معلومات تعريف شخصية (PII).</li>
+            <li>يتم تخزين جميع بيانات التصميم وملفات المشروع محليًا على جهازك.</li>
+            <li>ليس لدينا خوادم خلفية ولا نقوم بتحميل بياناتك.</li>
+        </ul>
+        <h2>2. استخدام الأذونات</h2>
+        <ul>
+            <li><strong>إذن التخزين:</strong> يستخدم لحفظ صور التصميم وقوائم المواد المصدرة في معرض الصور أو الملفات الخاصة بك.</li>
+            <li><strong>إذن الشبكة:</strong> يستخدم فقط للتحقق من تحديثات التطبيق (إن وجدت).</li>
+        </ul>
+        <h2>3. خدمات الطرف الثالث</h2>
+        <p>قد يحتوي هذا التطبيق على أدوات تطوير برمجيات تابعة لجهات خارجية (مثل إطار عمل Flutter نفسه)، والتي قد تجمع سجلات أعطال مجهولة المصدر للمساعدة في تحسين الاستقرار، ولكنها غير مرتبطة بهويتك الشخصية.</p>
+        <h2>4. اتصل بنا</h2>
+        <p>إذا كان لديك أي أسئلة حول سياسة الخصوصية هذه، يرجى الاتصال بالدعم الفني: support@ceilingmaster.com</p>
+    </div>
+
+</body>
+</html>
