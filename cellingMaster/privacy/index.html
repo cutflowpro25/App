@@ -54,6 +54,22 @@
                 document.getElementById('lang-en').style.display = 'block';
             }
         }
+
+        window.onload = function() {
+            var lang = 'en'; // Default
+            
+            // 1. Try URL parameter
+            var urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('lang')) {
+                lang = urlParams.get('lang');
+            } 
+            // 2. Try browser language if no URL param
+            else if (navigator.language) {
+                lang = navigator.language;
+            }
+            
+            showLanguage(lang);
+        };
     </script>
 </head>
 <body>
