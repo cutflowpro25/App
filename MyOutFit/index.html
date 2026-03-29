@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlamShow / 美装秀 - AI Virtual Try-on</title>
+    <style>
+        :root {
+            --primary: #FF2D55;
+            --primary-hover: #E0244B;
+            --bg-dark: #000000;
+            --bg-light: #ffffff;
+            --text-light: #f5f5f7;
+            --text-dark: #1d1d1f;
+            --text-gray: #86868b;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.18);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.5;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 导航栏 - 毛玻璃效果 */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 4rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #fff, #FF2D55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .lang-btn {
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+        }
+
+        .download-btn-nav {
+            background: var(--text-light);
+            color: var(--bg-dark);
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .download-btn-nav:hover {
+            transform: scale(1.05);
+        }
+
+        /* 英雄区域 (Hero) */
+        .hero {
+            min-height: 100vh; /* 改为 min-height，允许内容在小屏幕上自然撑开，防止被挤压 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding-top: 8rem; /* 增加顶部内边距，确保内容不会被顶部固定导航栏遮挡 */
+            padding-bottom: 4rem; /* 增加底部内边距，留出呼吸空间 */
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255,45,85,0.2) 0%, rgba(0,0,0,0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero p {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto 3rem auto;
+            font-weight: 400;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 45, 85, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(255, 45, 85, 0.4);
+        }
+
+        /* 3D 悬浮手机展示 */
+        .hero-mockup-container {
+            margin-top: 4rem;
+            perspective: 1200px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease 0.6s forwards;
+        }
+
+        .hero-mockup {
+            width: 300px; /* 回调宽度以匹配更准确的 iPhone 比例 (约 1:2.16) */
+            height: 650px;
+            background: #000;
+            border-radius: 40px; /* 减小圆角，防止切到状态栏文字 */
+            /* 模拟真实的手机边框：内圈黑边，外圈金属边框 */
+            box-shadow: 
+                0 0 0 3px #111,         /* 屏幕内黑边 */
+                0 0 0 6px #444,         /* 金属边框高光 */
+                0 0 0 7px #222,         /* 边框外缘 */
+                0 30px 60px rgba(0,0,0,0.6), /* 整体深层悬浮投影 */
+                inset 0 0 20px rgba(255,255,255,0.05); /* 屏幕内发光/玻璃微反光 */
+            position: relative;
+            transform: rotateX(15deg) rotateY(0deg);
+            transition: transform 0.5s ease-out;
+            /* overflow hidden 改在图片容器上，以便外边框不受影响 */
+            z-index: 1;
+        }
+        
+        /* 增加灵动岛 (Dynamic Island) 显著提升设备的专业逼真度 */
+        .hero-mockup::before {
+            content: '';
+            position: absolute;
+            top: 12px; /* 稍微上移 */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px; /* 稍微缩小 */
+            height: 26px; /* 稍微缩小 */
+            background: #000;
+            border-radius: 14px;
+            z-index: 10;
+            /* 微微的摄像头镜片反光，增强立体感 */
+            box-shadow: inset -2px -2px 4px rgba(255,255,255,0.1), inset 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero-mockup-screen {
+            position: absolute;
+            top: 3px; /* 对应内黑边厚度 */
+            left: 3px;
+            right: 3px;
+            bottom: 3px;
+            border-radius: 37px; /* 40 - 3 = 37 */
+            overflow: hidden;
+            background: #000;
+        }
+
+        .hero-mockup-screen img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* 改为 contain，确保截图的任何边缘都不会被裁剪 */
+            object-position: center top; /* 靠上对齐，保证状态栏位置准确 */
+            display: block;
+        }
+
+        .hero-mockup-screen::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg);
+            animation: shimmer 4s infinite;
+            z-index: 5; /* 在图片之上 */
+            pointer-events: none;
+        }
+
+        /* 横向滚动画廊 (Apple Style) */
+        .gallery-section {
+            padding: 8rem 0;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            overflow: hidden;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .marquee-wrapper {
+            position: relative;
+            width: 100vw;
+            max-width: 100%;
+            overflow: hidden;
+            padding: 2rem 0;
+        }
+
+        .marquee {
+            display: flex;
+            gap: 2rem;
+            padding: 0 2rem;
+            width: max-content;
+            animation: scroll 30s linear infinite;
+        }
+
+        .marquee:hover {
+            animation-play-state: paused;
+        }
+
+        .marquee-item {
+            width: 280px;
+            height: 580px;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: #f5f5f7;
+            flex-shrink: 0;
+        }
+
+        .marquee-item:hover {
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .marquee-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 特性网格 */
+        .features-section {
+            padding: 8rem 2rem;
+            background: var(--bg-dark);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .bento-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bento-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+            border-color: rgba(255, 45, 85, 0.5);
+        }
+
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,45,85,0.1), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .bento-card:hover::before {
+            opacity: 1;
+        }
+
+        .bento-card.large {
+            grid-column: span 2;
+            flex-direction: row;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .bento-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .bento-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .bento-card p {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            flex-grow: 1;
+        }
+
+        /* 底部信息 */
+        footer {
+            background: #000;
+            border-top: 1px solid #333;
+            padding: 4rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #fff;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .copyright {
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        /* 动画关键帧 */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes shimmer {
+            100% { left: 200%; }
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 900px) {
+            nav { padding: 1rem 2rem; }
+            .hero h1 { font-size: 3.5rem; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-card.large { grid-column: span 1; flex-direction: column; text-align: center; }
+            .bento-card.large .bento-content { text-align: left; }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-cta { flex-direction: column; }
+            .marquee-item { width: 220px; height: 460px; }
+            .hero-mockup { width: 240px; height: 480px; }
+        }
+
+        /* 滚动渐现类 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">GlamShow</div>
+        <div class="nav-controls">
+            <button class="lang-btn" id="lang-toggle" onclick="toggleLanguage()">EN / 中文</button>
+            <button class="download-btn-nav" id="nav-download">Get App</button>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <h1 id="title">The Future of Fashion.</h1>
+        <p id="subtitle">Experience AI-powered virtual try-on like never before. Your personal high-end boutique, right in your pocket.</p>
+        <div class="hero-cta">
+            <a href="#download" class="btn-primary" id="hero-btn">Download Now</a>
+        </div>
+        
+        <div class="hero-mockup-container">
+            <div class="hero-mockup" id="hero-phone">
+                <div class="hero-mockup-screen">
+                    <!-- 动态加载第1张图 -->
+                    <img id="hero-img" src="" alt="App Preview" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMzMzMiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZmlsbD0iIzY2NiIgZm9udC1zaXplPSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgYWxpZ25tZW50LWJhc2VsaW5lPSJtaWRkbGUiPjEucG5nPC90ZXh0Pjwvc3ZnPg=='">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Apple风格无限滚动画廊 -->
+    <section class="gallery-section">
+        <div class="section-header reveal">
+            <h2 id="gallery-title">Stunning Results. Instantly.</h2>
+        </div>
+        <div class="marquee-wrapper">
+            <div class="marquee" id="marquee-track">
+                <!-- JavaScript 将在这里注入两组图片以实现无缝滚动 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Bento Grid 特性展示 -->
+    <section class="features-section">
+        <div class="section-header reveal">
+            <h2 id="features-title" style="color: #fff;">Designed for Perfection.</h2>
+        </div>
+        
+        <div class="bento-grid">
+            <div class="bento-card large reveal">
+                <div class="bento-content">
+                    <div class="bento-icon">✨</div>
+                    <h3 id="f1-title">Immersive "Dazzling Boutique"</h3>
+                    <p id="f1-desc">Unique 3D circular boutique showcase interaction, placing you in a virtual high-end flagship store. Browse through hundreds of premium styles with an intuitive interface.</p>
+                </div>
+            </div>
+            
+            <div class="bento-card reveal">
+                <div class="bento-icon">📸</div>
+                <h3 id="f2-title">Quick Portrait Capture</h3>
+                <p id="f2-desc">Supports fast photo selection from camera or system album with minimalist operation for instant virtual try-on.</p>
+            </div>
+            
+            <div class="bento-card reveal">
+                <div class="bento-icon">⚡️</div>
+                <h3 id="f3-title">Parallel Async Try-on</h3>
+                <p id="f3-desc">Powerful AI background processing supporting multiple tasks simultaneously without waiting on the page.</p>
+            </div>
+            
+            <div class="bento-card large reveal">
+                <div class="bento-content">
+                    <div class="bento-icon">🔒</div>
+                    <h3 id="privacy-title">Privacy First Architecture</h3>
+                    <p id="privacy-desc">We have no registration process. All your try-on records, photos, and task statuses are stored strictly locally on your device. Your face, your data, your privacy.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">GlamShow</div>
+            <div class="footer-links">
+                <a href="#" id="user-agreement" target="_blank">User Agreement</a>
+                <a href="#" id="privacy-policy" target="_blank">Privacy Policy</a>
+                <a href="https://glamshow.app/support" target="_blank" id="support-link">Support</a>
+            </div>
+            <p class="copyright">© 2026 GlamShow App. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                navBtn: "Get App",
+                langToggle: "中文",
+                title: "The Future of Fashion.",
+                subtitle: "Experience AI-powered virtual try-on like never before. Your personal high-end boutique, right in your pocket.",
+                heroBtn: "Download Now",
+                galleryTitle: "Stunning Results. Instantly.",
+                featuresTitle: "Designed for Perfection.",
+                f1Title: "Immersive \"Dazzling Boutique\"",
+                f1Desc: "Unique 3D circular boutique showcase interaction, placing you in a virtual high-end flagship store. Browse through hundreds of premium styles.",
+                f2Title: "Quick Portrait Capture",
+                f2Desc: "Supports fast photo selection from camera or system album with minimalist operation for instant virtual try-on.",
+                f3Title: "Parallel Async Try-on",
+                f3Desc: "Powerful AI background processing supporting multiple tasks simultaneously without waiting on the page.",
+                privacyTitle: "Privacy First Architecture",
+                privacyDesc: "We have no registration process. All your try-on records, photos, and task statuses are stored strictly locally on your device. Your face, your data, your privacy.",
+                userAgreement: "User Agreement",
+                privacyPolicy: "Privacy Policy",
+                support: "Support"
+            },
+            zh: {
+                navBtn: "获取应用",
+                langToggle: "English",
+                title: "重塑时尚体验",
+                subtitle: "前所未有的 AI 虚拟试衣体验。把专属的高级定制橱窗，装进你的口袋。",
+                heroBtn: "立即下载",
+                galleryTitle: "惊艳效果，即刻呈现",
+                featuresTitle: "为追求极致而生",
+                f1Title: "沉浸式“炫彩橱窗”",
+                f1Desc: "独特的3D环形橱窗展示交互，让你宛若置身虚拟高级旗舰店。直观浏览数百款高端穿搭。",
+                f2Title: "快捷人像采撷",
+                f2Desc: "支持快速从相机或系统相册选图，极简操作，即刻体验虚拟试衣。",
+                f3Title: "并行异步试衣",
+                f3Desc: "强大的AI后台处理，支持多任务同时进行，页面无需等待，尽享丝滑体验。",
+                privacyTitle: "隐私至上架构",
+                privacyDesc: "我们不设注册流程。您的所有试衣记录、照片和任务状态均仅存储在您的设备本地。你的数据，完全由你掌控。",
+                userAgreement: "用户协议",
+                privacyPolicy: "隐私政策",
+                support: "技术支持"
+            }
+        };
+
+        let currentLang = 'en';
+
+        function initLang() {
+            const browserLang = navigator.language || navigator.userLanguage;
+            if (browserLang.toLowerCase().includes('zh')) {
+                currentLang = 'zh';
+            } else {
+                currentLang = 'en';
+            }
+            renderContent();
+            initGallery();
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            renderContent();
+            initGallery(); // 重新加载对应语言的图片
+        }
+
+        function renderContent() {
+            const t = translations[currentLang];
+            document.documentElement.lang = currentLang;
+            
+            // Text Replacements
+            document.getElementById('nav-download').innerText = t.navBtn;
+            document.getElementById('lang-toggle').innerText = t.langToggle;
+            
+            document.getElementById('title').innerText = t.title;
+            document.getElementById('subtitle').innerText = t.subtitle;
+            document.getElementById('hero-btn').innerText = t.heroBtn;
+            
+            document.getElementById('gallery-title').innerText = t.galleryTitle;
+            document.getElementById('features-title').innerText = t.featuresTitle;
+            
+            document.getElementById('f1-title').innerText = t.f1Title;
+            document.getElementById('f1-desc').innerText = t.f1Desc;
+            document.getElementById('f2-title').innerText = t.f2Title;
+            document.getElementById('f2-desc').innerText = t.f2Desc;
+            document.getElementById('f3-title').innerText = t.f3Title;
+            document.getElementById('f3-desc').innerText = t.f3Desc;
+            
+            document.getElementById('privacy-title').innerText = t.privacyTitle;
+            document.getElementById('privacy-desc').innerText = t.privacyDesc;
+
+            document.getElementById('user-agreement').innerText = t.userAgreement;
+            document.getElementById('privacy-policy').innerText = t.privacyPolicy;
+            document.getElementById('support-link').innerText = t.support;
+
+            // Update legal links
+            document.getElementById('user-agreement').href = currentLang + '/UserAgreement.html';
+            document.getElementById('privacy-policy').href = currentLang + '/PrivacyPolicy.html';
+            
+            // Update Hero Image (use image 1)
+            document.getElementById('hero-img').src = `${currentLang}/img/1.png`;
+        }
+
+        function initGallery() {
+            const track = document.getElementById('marquee-track');
+            track.innerHTML = '';
+            
+            // 创建一组图片 (2 到 7)
+            const createImages = () => {
+                let html = '';
+                for (let i = 2; i <= 7; i++) {
+                    const fallbackSvg = `data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlMmU4ZjAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZmlsbD0iI2EwYWVjMCIgZm9udC1zaXplPSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgYWxpZ25tZW50LWJhc2VsaW5lPSJtaWRkbGUiPnsiaX0ucG5nPC90ZXh0Pjwvc3ZnPg==`.replace('{i}', i);
+                    html += `
+                        <div class="marquee-item">
+                            <img src="${currentLang}/img/${i}.png" alt="App Screen ${i}" onerror="this.src='${fallbackSvg}'">
+                        </div>
+                    `;
+                }
+                return html;
+            };
+
+            // 注入两组以实现无缝滚动
+            track.innerHTML = createImages() + createImages();
+        }
+
+        // 交互与动画逻辑
+        document.addEventListener('DOMContentLoaded', () => {
+            initLang();
+
+            // 1. 鼠标跟随高光效果 (Bento Cards)
+            document.querySelectorAll('.bento-card').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                });
+            });
+
+            // 2. Hero区域手机视差滚动效果
+            document.addEventListener('mousemove', e => {
+                const phone = document.getElementById('hero-phone');
+                if(!phone) return;
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+                phone.style.transform = `rotateY(${xAxis}deg) rotateX(${15 + yAxis}deg)`;
+            });
+
+            // 3. 滚动渐现动画 (Scroll Reveal)
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const revealOnScroll = () => {
+                const windowHeight = window.innerHeight;
+                revealElements.forEach(el => {
+                    const elementTop = el.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    if (elementTop < windowHeight - elementVisible) {
+                        el.classList.add('active');
+                    }
+                });
+            };
+
+            window.addEventListener('scroll', revealOnScroll);
+            revealOnScroll(); // 触发一次初始检查
+        });
+    </script>
+</body>
+</html>
