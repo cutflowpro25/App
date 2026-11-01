@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#06080F">
+<script>
+  /* App 内嵌（?embed=1）时立刻隐藏站点顶栏，避免首帧闪烁 */
+  if (new URLSearchParams(location.search).get('embed') === '1') {
+    document.documentElement.classList.add('embed');
+  }
+</script>
+<title data-en="Terms of Service — Sonare" data-zh="用户协议 — 声眠 Sonare" data-zh-hant="用戶協議 — 聲眠 Sonare">用户协议 — 声眠 Sonare</title>
+<link rel="icon" href="../assets/logo.png">
+<style>
+  :root{
+    /* 与 lib/ui/palette.dart AppPalette.night（夜航）一致 */
+    --bg:#06080F;--surface:#10172A;--surface2:#17213A;--border:#29334E;
+    --text:#EDF0FF;--dim:#A1AECF;--faint:#8997BA;
+    --primary:#AD9AFF;--primary-2:#7053DB;--mint:#70DEC5;--moon:#FFD09C;--warn:#FFB59F;
+    --stroke:rgba(173,154,255,.14);--panel:#10172A;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:
+      radial-gradient(800px 420px at 85% -10%,rgba(173,154,255,.14),transparent 62%),
+      radial-gradient(600px 400px at 5% 0%,rgba(112,222,197,.06),transparent 60%),
+      var(--bg);
+    color:var(--text);line-height:1.75;-webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--primary);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .topbar{
+    position:sticky;top:0;z-index:10;
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    background:rgba(6,8,15,.82);border-bottom:1px solid var(--stroke);
+  }
+  .topbar-inner{
+    max-width:860px;margin:0 auto;padding:.8rem 1.5rem;
+    display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  }
+  .back{display:inline-flex;align-items:center;gap:.5rem;color:var(--dim);font-size:.88rem;font-weight:500}
+  .back:hover{color:var(--text);text-decoration:none}
+  .back img{width:26px;height:26px;border-radius:7px}
+  /* 内嵌到 App 的 WebView 时隐藏站点顶栏（App 自带返回与标题） */
+  html.embed .topbar{display:none}
+  html.embed main{padding:1.6rem 1.15rem 3rem}
+  @media (max-width:430px){
+    html.embed main{padding:1.15rem 1.05rem 2.5rem}
+    html.embed h1{font-size:1.7rem}
+  }
+  .lang-btn{
+    font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;
+    color:var(--dim);background:transparent;border:1px solid var(--stroke);
+    padding:.42rem .85rem;border-radius:99px;cursor:pointer;transition:.2s;
+  }
+  .lang-btn:hover{color:var(--text);border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.04)}
+  main{max-width:860px;margin:0 auto;padding:3.25rem 1.5rem 4rem}
+  .kicker{
+    display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--primary);background:rgba(173,154,255,.12);border:1px solid rgba(173,154,255,.26);
+    padding:.3rem .7rem;border-radius:99px;margin-bottom:1rem;
+  }
+  h1{font-size:clamp(1.9rem,4vw,2.6rem);letter-spacing:-.03em;line-height:1.15;margin-bottom:.6rem}
+  .updated{color:var(--faint);font-size:.85rem;font-family:var(--mono);margin-bottom:2.25rem}
+  .card{
+    background:var(--panel);border:1px solid var(--stroke);border-radius:16px;
+    padding:1.6rem 1.75rem;margin-bottom:1.75rem;
+  }
+  .card p{color:var(--dim);font-size:.95rem;margin-bottom:.85rem}
+  .card p:last-child{margin-bottom:0}
+  .card b{color:var(--text);font-weight:600}
+  .warn{border-color:rgba(255,181,159,.28);background:rgba(255,181,159,.07)}
+  .warn b{color:var(--warn)}
+  h2{
+    font-size:1.08rem;letter-spacing:-.01em;margin:2.1rem 0 .75rem;
+    display:flex;align-items:center;gap:.6rem;font-weight:650;
+  }
+  h2::before{content:"";width:3px;height:1.05rem;border-radius:2px;background:linear-gradient(180deg,#AD9AFF,#7053DB)}
+  p{color:var(--dim);font-size:.95rem;margin-bottom:.85rem}
+  ul{margin:.25rem 0 .9rem 1.1rem;color:var(--dim);font-size:.95rem}
+  li{margin-bottom:.4rem}
+  .mail-btn{
+    display:inline-flex;align-items:center;gap:.55rem;margin-top:.5rem;
+    font-size:.92rem;font-weight:600;color:var(--primary);text-decoration:none;
+    background:rgba(173,154,255,.1);border:1px solid rgba(173,154,255,.24);
+    padding:.62rem 1.15rem;border-radius:999px;
+    transition:background .18s ease,border-color .18s ease,transform .18s ease;
+  }
+  .mail-btn:hover{text-decoration:none;background:rgba(173,154,255,.18);
+    border-color:rgba(173,154,255,.44);transform:translateY(-1px)}
+  .mail-btn svg{width:17px;height:17px}
+  footer{
+    border-top:1px solid var(--stroke);margin-top:2.5rem;padding-top:1.25rem;
+    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    font-size:.8rem;color:var(--faint);
+  }
+  footer a{color:var(--dim);font-size:.8rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="../index.html">
+      <img src="../assets/logo.png" alt="">
+      <span data-en="← Back to Sonare" data-zh="← 返回声眠官网" data-zh-hant="← 返回聲眠官網">← 返回声眠官网</span>
+    </a>
+    <button class="lang-btn" id="lang-toggle" onclick="toggleLanguage()">简体</button>
+  </div>
+</div>
+
+<main>
+  <div class="kicker" data-en="Legal" data-zh="法律文件" data-zh-hant="法律文件">法律文件</div>
+  <h1 data-en="Terms of Service" data-zh="用户协议" data-zh-hant="用戶協議">用户协议</h1>
+  <div class="updated" data-en="Last updated: October 22, 2026" data-zh="最后更新：2026 年 10 月 22 日" data-zh-hant="最後更新：2026 年 10 月 22 日">最后更新：2026 年 10 月 22 日</div>
+
+  <div class="card">
+    <p data-en="Please read these Terms of Service (“Terms”) carefully before using the <b>Sonare</b> application (Chinese title: 声眠 / 聲眠, the “App” or the “Service”). By downloading, accessing or using the Service you agree to be bound by these Terms. If you do not agree with any part of them, please do not use the Service." data-zh="在使用 <b>声眠</b>（Sonare）应用程序（以下简称“本应用”或“本服务”）之前，请仔细阅读本用户协议（以下简称“协议”）。下载、访问或使用本服务，即表示您同意受本协议约束。如果您不同意协议的任何部分，请勿使用本服务。" data-zh-hant="在使用 <b>聲眠</b>（Sonare）應用程式（以下簡稱“本應用程式”或“本服務”）之前，請仔細閱讀本用戶協議（以下簡稱“協議”）。下載、訪問或使用本服務，即表示您同意受本協議約束。如果您不同意協議的任何部分，請勿使用本服務。">在使用 <b>声眠</b>（Sonare）应用程序（以下简称“本应用”或“本服务”）之前，请仔细阅读本用户协议（以下简称“协议”）。下载、访问或使用本服务，即表示您同意受本协议约束。如果您不同意协议的任何部分，请勿使用本服务。</p>
+  </div>
+
+  <h2 data-en="1. The Service" data-zh="1. 服务说明" data-zh-hant="1. 服務說明">1. 服务说明</h2>
+  <p data-en="Sonare is a sound player and timer, organised into four tabs — Soundscape, Library, Sleep and Mine. It synthesizes white, pink, brown, blue and violet noise locally in real time, layers optional binaural beats, provides a fade timer and a bedside clock, and keeps your settings and usage counters on this device only. The Service is supplied as a mobile app for iPhone." data-zh="声眠是一款声音播放与定时工具，分为「声景 / 声音库 / 休息 / 我的」四个标签页。它在本地实时合成白 / 粉 / 棕 / 蓝 / 紫五种噪音，可叠加可选的双耳节拍，提供渐弱定时与床头钟，并把您的设置与使用计数仅保存在本设备。本服务以 iPhone 移动应用形式提供。" data-zh-hant="聲眠是一款聲音播放與定時工具，分為「聲景 / 聲音庫 / 休息 / 我的」四個標籤頁。它在本地即時合成白 / 粉 / 棕 / 藍 / 紫五種噪音，可疊加可選的雙耳節拍，提供漸弱定時與床頭鐘，並把您的設定與使用計數僅保存在本裝置。本服務以 iPhone 流動應用程式形式提供。">声眠是一款声音播放与定时工具，分为「声景 / 声音库 / 休息 / 我的」四个标签页。它在本地实时合成白 / 粉 / 棕 / 蓝 / 紫五种噪音，可叠加可选的双耳节拍，提供渐弱定时与床头钟，并把您的设置与使用计数仅保存在本设备。本服务以 iPhone 移动应用形式提供。</p>
+
+  <h2 data-en="2. Use License" data-zh="2. 使用许可" data-zh-hant="2. 使用許可">2. 使用许可</h2>
+  <p data-en="You are granted a personal, non-exclusive, non-transferable licence to use the Service for your own personal, non-commercial use. Under this licence you may not:" data-zh="我们授予您一项个人、非独占、不可转让的许可，用于您自身的个人非商业用途。在此许可下，您不得：" data-zh-hant="我們授予您一項個人、非獨佔、不可轉讓的許可，用於您自身的個人非商業用途。在此許可下，您不得：">我们授予您一项个人、非独占、不可转让的许可，用于您自身的个人非商业用途。在此许可下，您不得：</p>
+  <ul>
+    <li data-en="decompile, reverse engineer or attempt to extract the source code of the App;" data-zh="反编译、逆向工程或试图提取本应用源代码；" data-zh-hant="反編譯、逆向工程或試圖提取本應用程式源代碼；">反编译、逆向工程或试图提取本应用源代码；</li>
+    <li data-en="resell, sublicense, rent or redistribute the App or its content;" data-zh="转售、再许可、出租或再分发本应用及其内容；" data-zh-hant="轉售、再許可、出租或再分發本應用程式及其內容；">转售、再许可、出租或再分发本应用及其内容；</li>
+    <li data-en="use the Service in any way that violates applicable laws or regulations;" data-zh="以任何违反适用法律法规的方式使用本服务；" data-zh-hant="以任何違反適用法律法規的方式使用本服務；">以任何违反适用法律法规的方式使用本服务；</li>
+    <li data-en="remove any copyright, trademark or other proprietary notices." data-zh="移除任何版权、商标或其他专有声明。" data-zh-hant="移除任何版權、商標或其他專有聲明。">移除任何版权、商标或其他专有声明。</li>
+  </ul>
+  <p data-en="This licence terminates automatically if you breach any of these restrictions." data-zh="如果您违反上述任何限制，本许可将自动终止。" data-zh-hant="如果您違反上述任何限制，本許可將自動終止。">如果您违反上述任何限制，本许可将自动终止。</p>
+
+  <h2 data-en="3. Audio, Health and Medical — Important" data-zh="3. 声音、健康与医疗 — 重要提示" data-zh-hant="3. 聲音、健康與醫療 — 重要提示">3. 声音、健康与医疗 — 重要提示</h2>
+  <div class="card warn">
+    <p data-en="<b>Sonare is a sound playback and timer tool.</b> It does not perform sleep detection, does not generate sleep reports and has no wake-up alarm. Nothing in the App is medical or health advice, and no statement in the App should be read as a claim of diagnosis, treatment or prevention of any condition." data-zh="<b>声眠是一款声音播放与定时工具。</b>它不进行睡眠识别、不生成睡眠报告，也没有唤醒闹钟。本应用内的任何内容均不构成医疗或健康建议，也不应被理解为对任何状况的诊断、治疗或预防声明。" data-zh-hant="<b>聲眠是一款聲音播放與定時工具。</b>它不進行睡眠識別、不生成睡眠報告，也沒有喚醒鬧鐘。本應用程式內的任何內容均不構成醫療或健康建議，也不應被理解為對任何狀況的診斷、治療或預防聲明。"><b>声眠是一款声音播放与定时工具。</b>它不进行睡眠识别、不生成睡眠报告，也没有唤醒闹钟。本应用内的任何内容均不构成医疗或健康建议，也不应被理解为对任何状况的诊断、治疗或预防声明。</p>
+    <p data-en="Binaural beats are an audio layering feature (a 200 Hz carrier with a 2 / 5 / 10 Hz difference between the ears, perceived only with stereo headphones). They do not represent deep sleep, meditation or any other physiological state, and results — if any — vary between individuals." data-zh="双耳节拍是一种声音叠加功能（200 Hz 载波，左右耳频率相差 2 / 5 / 10 Hz，仅佩戴立体声耳机才能感知）。它不代表深睡、冥想或其他任何生理状态，效果（如有）因人而异。" data-zh-hant="雙耳節拍是一種聲音疊加功能（200 Hz 載波，左右耳頻率相差 2 / 5 / 10 Hz，僅佩戴立體聲耳機才能感知）。它不代表深睡、冥想或其他任何生理狀態，效果（如有）因人而異。">双耳节拍是一种声音叠加功能（200 Hz 载波，左右耳频率相差 2 / 5 / 10 Hz，仅佩戴立体声耳机才能感知）。它不代表深睡、冥想或其他任何生理状态，效果（如有）因人而异。</p>
+    <p data-en="Please keep the volume at a comfortable level and avoid prolonged listening at high volume, especially with headphones. If you have a medical condition (including any sleep disorder or hearing condition), consult a qualified professional before relying on any relaxation audio." data-zh="请将音量保持在舒适水平，避免长时间高音量收听，佩戴耳机时尤须注意。如您存在任何健康状况（包括睡眠障碍或听力问题），请在依赖任何放松音频之前咨询专业医师。" data-zh-hant="請將音量保持在舒適水平，避免長時間高音量收聽，佩戴耳機時尤須注意。如您存在任何健康狀況（包括睡眠障礙或聽力問題），請在依賴任何放鬆音頻之前諮詢專業醫師。">请将音量保持在舒适水平，避免长时间高音量收听，佩戴耳机时尤须注意。如您存在任何健康状况（包括睡眠障碍或听力问题），请在依赖任何放松音频之前咨询专业医师。</p>
+  </div>
+
+  <h2 data-en="4. Pricing and Payments" data-zh="4. 价格与付款" data-zh-hant="4. 價格與付款">4. 价格与付款</h2>
+  <p data-en="The Service is provided free of charge. It contains no in-app purchases, no subscriptions and no advertising. If this ever changes, the change will be announced in the App and on the official website before it takes effect." data-zh="本服务免费提供。它不包含任何 App 内购买、订阅或广告。如未来发生变化，将在生效前于应用内及官方网站公告。" data-zh-hant="本服務免費提供。它不包含任何 App 內購買、訂閱或廣告。如未來發生變化，將在生效前於應用程式內及官方網站公告。">本服务免费提供。它不包含任何 App 内购买、订阅或广告。如未来发生变化，将在生效前于应用内及官方网站公告。</p>
+
+  <h2 data-en="5. Your Data" data-zh="5. 您的数据" data-zh-hant="5. 您的數據">5. 您的数据</h2>
+  <p data-en="The Service stores your settings and usage counters locally on your device. We have no access to them and cannot recover them for you. Uninstalling the App or clearing its data removes every record, and there is no cloud copy. See our <a href=&quot;privacy_policy.html&quot;>Privacy Policy</a> for details." data-zh="本服务将您的设置与使用计数保存在设备本地。我们无法访问、也无法为您找回这些数据。卸载本应用或清除其数据会删除全部记录，且没有云端副本。详见<a href=&quot;privacy_policy.html&quot;>隐私政策</a>。" data-zh-hant="本服務將您的設定與使用計數保存在裝置本地。我們無法訪問、也無法為您找回這些數據。卸載本應用程式或清除其數據會刪除全部記錄，且沒有雲端副本。詳見<a href=&quot;privacy_policy.html&quot;>隱私政策</a>。">本服务将您的设置与使用计数保存在设备本地。我们无法访问、也无法为您找回这些数据。卸载本应用或清除其数据会删除全部记录，且没有云端副本。详见<a href="privacy_policy.html">隐私政策</a>。</p>
+
+  <h2 data-en="6. Intellectual Property" data-zh="6. 知识产权" data-zh-hant="6. 知識產權">6. 知识产权</h2>
+  <p data-en="The App, including its name, interface, code and generated audio algorithms, is owned by the developer and protected by applicable intellectual property laws. Your own settings and local records remain yours." data-zh="本应用（包括其名称、界面、代码与音频合成算法）归开发者所有，并受适用知识产权法律保护。您自己的设置与本地记录仍归您所有。" data-zh-hant="本應用程式（包括其名稱、介面、代碼與音頻合成算法）歸開發者所有，並受適用知識產權法律保護。您自己的設定與本地記錄仍歸您所有。">本应用（包括其名称、界面、代码与音频合成算法）归开发者所有，并受适用知识产权法律保护。您自己的设置与本地记录仍归您所有。</p>
+
+  <h2 data-en="7. Disclaimer" data-zh="7. 免责声明" data-zh-hant="7. 免責聲明">7. 免责声明</h2>
+  <p data-en="The Service is provided “as is” and “as available”, without warranties of any kind, express or implied, including but not limited to merchantability, fitness for a particular purpose or non-infringement. We do not warrant that the Service will be uninterrupted or error-free, that audio will play on every device configuration, or that any defect will be corrected." data-zh="本服务按“现状”与“现有可用”状态提供，不作任何明示或暗示的保证，包括但不限于适销性、特定用途适用性或不侵权。我们不保证服务不中断、无错误，不保证音频在所有设备配置下均可正常播放，也不保证任何缺陷会被修正。" data-zh-hant="本服務按「現狀」與「現有可用」狀態提供，不作任何明示或暗示的保證，包括但不限於適銷性、特定用途適用性或不侵權。我們不保證服務不中斷、無錯誤，不保證音頻在所有裝置配置下均可正常播放，也不保證任何缺陷會被修正。">本服务按“现状”与“现有可用”状态提供，不作任何明示或暗示的保证，包括但不限于适销性、特定用途适用性或不侵权。我们不保证服务不中断、无错误，不保证音频在所有设备配置下均可正常播放，也不保证任何缺陷会被修正。</p>
+
+  <h2 data-en="8. Limitation of Liability" data-zh="8. 责任限制" data-zh-hant="8. 責任限制">8. 责任限制</h2>
+  <p data-en="To the maximum extent permitted by law, we shall not be liable for any indirect, incidental, special or consequential damages arising from the use of or inability to use the Service, including any outcome relating to sleep, rest or wellbeing, even if we have been advised of the possibility of such damages." data-zh="在法律允许的最大范围内，对于因使用或无法使用本服务而产生的任何间接、附带、特殊或后果性损害（包括与睡眠、休息或身心健康相关的任何后果），我们不承担责任，即使我们已被告知此类损害的可能性。" data-zh-hant="在法律允許的最大範圍內，對於因使用或無法使用本服務而產生的任何間接、附帶、特殊或後果性損害（包括與睡眠、休息或身心健康相關的任何後果），我們不承擔責任，即使我們已被告知此類損害的可能性。">在法律允许的最大范围内，对于因使用或无法使用本服务而产生的任何间接、附带、特殊或后果性损害（包括与睡眠、休息或身心健康相关的任何后果），我们不承担责任，即使我们已被告知此类损害的可能性。</p>
+
+  <h2 data-en="9. Changes to These Terms" data-zh="9. 协议修改" data-zh-hant="9. 協議修改">9. 协议修改</h2>
+  <p data-en="We may revise these Terms at any time. The current version is always published on this page with its “last updated” date. By continuing to use the Service after a revision you accept the revised Terms." data-zh="我们可能随时修订本协议。最新版本始终发布在本页面并标注“最后更新”日期。修订后继续使用本服务，即表示您接受修订后的协议。" data-zh-hant="我們可能隨時修訂本協議。最新版本始終發布在本頁面並標註「最後更新」日期。修訂後繼續使用本服務，即表示您接受修訂後的協議。">我们可能随时修订本协议。最新版本始终发布在本页面并标注“最后更新”日期。修订后继续使用本服务，即表示您接受修订后的协议。</p>
+
+  <h2 data-en="10. Governing Law" data-zh="10. 适用法律" data-zh-hant="10. 適用法律">10. 适用法律</h2>
+  <p data-en="These Terms are governed by and construed in accordance with the laws of the jurisdiction in which the developer operates, without regard to its conflict-of-law rules." data-zh="本协议受开发者运营所在地法律管辖并据其解释，不适用冲突法规则。" data-zh-hant="本協議受開發者運營所在地法律管轄並據其解釋，不適用衝突法規則。">本协议受开发者运营所在地法律管辖并据其解释，不适用冲突法规则。</p>
+
+  <h2 data-en="11. Contact Us" data-zh="11. 联系我们" data-zh-hant="11. 聯繫我們">11. 联系我们</h2>
+  <p data-en="If you have any question about these Terms, please write to us:" data-zh="如果您对本协议有任何疑问，欢迎通过以下方式联系我们：" data-zh-hant="如果您對本協議有任何疑問，歡迎通過以下方式聯繫我們：">如果您对本协议有任何疑问，欢迎通过以下方式联系我们：</p>
+  <a class="mail-btn" id="mail-btn" href="mailto:support@sonare.app">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5L12 13l8.5-6.5"/></svg>
+    <span data-en="Email support" data-zh="发送邮件联系我们" data-zh-hant="發送郵件聯繫我們">发送邮件联系我们</span>
+  </a>
+
+  <footer>
+    <span data-en="© 2026 Sonare. All rights reserved." data-zh="© 2026 Sonare. 保留所有权利。" data-zh-hant="© 2026 Sonare. 保留所有權利。">© 2026 Sonare. 保留所有权利。</span>
+    <a href="privacy_policy.html" data-en="← Privacy Policy" data-zh="← 隐私政策" data-zh-hant="← 隱私政策">← 隐私政策</a>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var LANGS = ['zh', 'zh-hant', 'en'];
+  var KEY = 'sonare-lang';
+
+  // 支持 ?lang=zh / zh-hant / zh-TW / zh-HK / en
+  function normalize(v) {
+    v = (v || '').toLowerCase();
+    if (v === 'en') return 'en';
+    if (v === 'zh' || v === 'zh-cn' || v === 'zh-hans') return 'zh';
+    if (v.indexOf('hant') > 0 || v.indexOf('-tw') > 0 || v.indexOf('-hk') > 0 || v.indexOf('-mo') > 0) return 'zh-hant';
+    if (v.indexOf('zh') === 0) return 'zh';
+    return null;
+  }
+
+  var lang = normalize(new URLSearchParams(location.search).get('lang'))
+    || normalize(localStorage.getItem(KEY))
+    || normalize(navigator.language)
+    || 'zh';
+  localStorage.setItem(KEY, lang);
+
+  function apply(l) {
+    document.documentElement.lang = l === 'zh' ? 'zh-CN' : l === 'zh-hant' ? 'zh-TW' : 'en';
+    document.querySelectorAll('[data-en]').forEach(function (el) {
+      if (el.tagName === 'TITLE') return;
+      var v = el.getAttribute('data-' + l);
+      if (v !== null) el.innerHTML = v;
+    });
+    var title = document.querySelector('title');
+    if (title) {
+      var t = title.getAttribute('data-' + l);
+      if (t) title.textContent = t;
+    }
+    var NAMES = { zh: '简体', 'zh-hant': '繁體', en: 'EN' };
+    var TIPS = {
+      zh: '当前语言：简体中文 · 点击切换为繁體',
+      'zh-hant': '當前語言：繁體中文 · 點擊切換為 English',
+      en: 'Language: English · click to switch to 简体中文'
+    };
+    var label = document.getElementById('lang-label') || document.getElementById('lang-toggle');
+    if (label) label.textContent = NAMES[l];
+    var lb = document.getElementById('lang-toggle');
+    if (lb) { lb.title = TIPS[l]; lb.setAttribute('aria-label', TIPS[l]); }
+
+    var SUBJ = {
+      zh: '[声眠 Sonare] 用户协议咨询',
+      'zh-hant': '[聲眠 Sonare] 用戶協議諮詢',
+      en: '[Sonare] terms inquiry'
+    };
+    var mb = document.getElementById('mail-btn');
+    if (mb) mb.href = 'mailto:support@sonare.app?subject=' + encodeURIComponent(SUBJ[l]);
+  }
+
+  window.toggleLanguage = function () {
+    lang = LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length];
+    localStorage.setItem(KEY, lang);
+    apply(lang);
+  };
+
+  apply(lang);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#06080F">
+<title data-en="Sonare — Locally Synthesized White Noise · Binaural Beats · Fade Timer" data-zh="声眠 Sonare — 本地合成白噪音 · 双耳节拍 · 渐弱定时" data-zh-hant="聲眠 Sonare — 本地合成白噪音 · 雙耳節拍 · 漸弱定時">声眠 Sonare — 本地合成白噪音 · 双耳节拍 · 渐弱定时</title>
+<meta name="description" content="声眠 Sonare · 五种本地实时合成的噪音（白/粉/棕/蓝/紫）、声场与音调调节、200 Hz 双耳节拍、15-60 分钟渐弱定时与床头钟。不联网、不收集数据、无广告、无内购。">
+<link rel="icon" href="assets/logo.png">
+<style>
+/* 配色全部取自应用 lib/ui/palette.dart 的 AppPalette.night（夜航主题） */
+:root{
+  --bg:#06080F;           /* bg       */
+  --stage:#0A0E18;        /* stage    */
+  --surface:#10172A;      /* surface  */
+  --surface2:#17213A;     /* surface2 */
+  --border:#29334E;       /* border   */
+  --text:#EDF0FF;         /* text     */
+  --dim:#A1AECF;          /* dim      */
+  --faint:#8997BA;        /* faint    */
+  --primary:#AD9AFF;      /* primary  */
+  --primary-2:#7053DB;    /* playGradient 结束色 */
+  --logo-a:#AA8AFF;       /* logoGradient 起始色 */
+  --logo-b:#5C49CB;       /* logoGradient 结束色 */
+  --mint:#70DEC5;         /* mint     */
+  --moon:#FFD09C;         /* moon     */
+  --warn:#FFB59F;         /* warn     */
+  --soft:rgba(173,154,255,.13);
+  --stroke:rgba(173,154,255,.14);
+  --stroke-strong:rgba(173,154,255,.3);
+  --radius:18px;
+  --max:1180px;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Inter","SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(900px 520px at 78% -8%,rgba(173,154,255,.17),transparent 60%),
+    radial-gradient(760px 500px at 8% 4%,rgba(112,222,197,.08),transparent 62%),
+    linear-gradient(180deg,#070912 0%,#06080F 45%,#06080F 100%);
+}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(173,154,255,.35)}
+
+.wrap{max-width:var(--max);margin:0 auto;padding:0 1.5rem}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  background:rgba(6,8,15,.72);
+  border-bottom:1px solid var(--stroke);
+}
+.nav-inner{
+  max-width:var(--max);margin:0 auto;padding:.85rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1.25rem;
+}
+.brand{display:flex;align-items:center;gap:.65rem;font-weight:700;letter-spacing:-.02em;font-size:1.08rem}
+.brand img{width:34px;height:34px;border-radius:9px;box-shadow:0 6px 18px rgba(173,154,255,.3)}
+.brand .word span{
+  background:linear-gradient(120deg,var(--logo-a),var(--logo-b));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.nav-links{display:flex;align-items:center;gap:1.9rem}
+.nav-links a{font-size:.92rem;color:var(--dim);font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.nav-actions{display:flex;align-items:center;gap:.65rem}
+
+.lang-btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:var(--mono);font-size:.76rem;letter-spacing:.08em;
+  color:var(--dim);background:transparent;border:1px solid var(--stroke);
+  padding:.5rem .8rem;border-radius:99px;cursor:pointer;transition:.22s;
+}
+.lang-btn:hover{color:var(--text);border-color:var(--stroke-strong);background:rgba(255,255,255,.04)}
+.lang-btn svg{width:13px;height:13px;opacity:.8}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.55rem;
+  padding:.82rem 1.35rem;border-radius:99px;font-weight:600;font-size:.94rem;
+  border:1px solid transparent;cursor:pointer;transition:transform .2s,box-shadow .25s,background .2s,border-color .2s;
+  white-space:nowrap;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--logo-a) 0%,var(--logo-b) 100%);
+  color:#0A0714;
+  box-shadow:0 10px 26px rgba(140,116,230,.32),inset 0 1px 0 rgba(255,255,255,.3);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(140,116,230,.42),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn-ghost{background:rgba(255,255,255,.04);border-color:var(--stroke);color:var(--text)}
+.btn-ghost:hover{background:rgba(255,255,255,.08);border-color:var(--stroke-strong);transform:translateY(-2px)}
+.btn-sm{padding:.55rem 1rem;font-size:.85rem}
+.btn svg{width:16px;height:16px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;padding:5.5rem 0 3rem}
+.hero::after{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(circle at 50% 22%,#000 0%,transparent 68%);
+  -webkit-mask-image:radial-gradient(circle at 50% 22%,#000 0%,transparent 68%);
+  opacity:.5;
+}
+.hero-grid{
+  position:relative;z-index:1;max-width:var(--max);margin:0 auto;padding:0 1.5rem;
+  display:grid;grid-template-columns:1.05fr .95fr;gap:3rem;align-items:center;
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--primary);background:var(--soft);border:1px solid var(--stroke-strong);
+  padding:.42rem .8rem;border-radius:99px;margin-bottom:1.5rem;
+}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 0 rgba(173,154,255,.7);animation:pulse 2.4s infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(173,154,255,.55)}
+  70%{box-shadow:0 0 0 9px rgba(173,154,255,0)}
+  100%{box-shadow:0 0 0 0 rgba(173,154,255,0)}
+}
+h1{
+  font-size:clamp(2.35rem,4.6vw,3.75rem);
+  line-height:1.08;letter-spacing:-.035em;font-weight:750;margin-bottom:1.25rem;
+}
+h1 em{
+  font-style:normal;
+  background:linear-gradient(100deg,#D9CFFF 0%,#AD9AFF 45%,#7053DB 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.lede{color:var(--dim);font-size:1.075rem;max-width:33rem;margin-bottom:2rem}
+.lede b{color:var(--text);font-weight:600}
+.hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-bottom:1.75rem}
+.hero-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem 1.1rem;font-size:.83rem;color:var(--faint)}
+.hero-meta span{display:inline-flex;align-items:center;gap:.42rem}
+.hero-meta svg{width:14px;height:14px;color:var(--primary)}
+.hero-meta i{width:3px;height:3px;border-radius:50%;background:var(--faint);opacity:.6}
+
+/* ---------- phone mockup ---------- */
+.hero-visual{position:relative;display:flex;justify-content:center;align-items:center;min-height:560px}
+.glow{
+  position:absolute;width:480px;height:480px;border-radius:50%;
+  background:radial-gradient(circle,rgba(173,154,255,.28) 0%,rgba(173,154,255,.05) 45%,transparent 70%);
+  filter:blur(18px);
+}
+.phone{
+  position:relative;z-index:2;width:288px;aspect-ratio:9/19.5;
+  border-radius:44px;padding:9px;
+  background:linear-gradient(155deg,#232A44 0%,#0C0F1C 42%,#1C2338 100%);
+  box-shadow:
+    0 40px 90px rgba(0,0,0,.65),
+    0 0 0 1px rgba(255,255,255,.10),
+    inset 0 1px 1px rgba(255,255,255,.16);
+  transform:perspective(1400px) rotateY(-8deg) rotateX(3deg);
+  transition:transform .6s cubic-bezier(.2,.8,.2,1);
+}
+.hero-visual:hover .phone{transform:perspective(1400px) rotateY(-3deg) rotateX(1deg) translateY(-6px)}
+.phone-screen{
+  position:relative;width:100%;height:100%;border-radius:35px;overflow:hidden;
+  background:linear-gradient(180deg,var(--stageTop,#1D2140) 0%,var(--stage,#0A0E18) 34%,var(--bg) 100%);
+  display:flex;flex-direction:column;
+  padding:14px 13px 12px;gap:10px;
+  font-size:11px;
+}
+.phone-screen::after{
+  content:"";position:absolute;inset:0;border-radius:35px;
+  background:linear-gradient(115deg,rgba(255,255,255,.09) 0%,transparent 32%,transparent 70%,rgba(255,255,255,.045) 100%);
+  pointer-events:none;z-index:5;
+}
+.notch{
+  position:absolute;top:14px;left:50%;transform:translateX(-50%);
+  width:64px;height:6px;border-radius:99px;background:#000;opacity:.55;z-index:6;
+}
+/* mockup: 顶部头部 */
+.ph-head{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.ph-logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--logo-a),var(--logo-b));display:grid;place-items:center;flex:0 0 auto}
+.ph-logo svg{width:15px;height:15px}
+.ph-title{font-weight:700;font-size:13px;letter-spacing:-.01em}
+.ph-sub{font-size:9.5px;color:var(--dim)}
+.ph-badge{margin-left:auto;font-family:var(--mono);font-size:8.5px;color:var(--mint);background:rgba(112,222,197,.1);border:1px solid rgba(112,222,197,.25);padding:3px 7px;border-radius:99px;white-space:nowrap}
+/* mockup: 播放卡 */
+.ph-card{background:rgba(16,23,42,.72);border:1px solid var(--border);border-radius:16px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.ring{
+  position:relative;width:118px;height:118px;border-radius:50%;
+  background:repeating-conic-gradient(from 0deg,rgba(173,154,255,.85) 0 2deg,transparent 2deg 8.2deg);
+  -webkit-mask:radial-gradient(closest-side,transparent 64%,#000 65%,#000 96%,transparent 97%);
+  mask:radial-gradient(closest-side,transparent 64%,#000 65%,#000 96%,transparent 97%);
+  animation:spin 14s linear infinite;
+}
+.ring::before{
+  content:"";position:absolute;inset:14px;border-radius:50%;
+  background:radial-gradient(circle,rgba(173,154,255,.32) 0%,transparent 68%);
+  filter:blur(6px);animation:breathe 5s ease-in-out infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes breathe{0%,100%{opacity:.55;transform:scale(.94)}50%{opacity:1;transform:scale(1.06)}}
+.ring-core{
+  position:absolute;inset:0;display:grid;place-items:center;
+}
+.ring-core svg{width:34px;height:34px;filter:drop-shadow(0 0 10px rgba(255,208,156,.5))}
+.ph-noise{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.ph-state{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.ph-state span{font-size:8.5px;font-family:var(--mono);color:var(--mint);background:rgba(112,222,197,.1);border:1px solid rgba(112,222,197,.22);padding:2px 6px;border-radius:99px;white-space:nowrap}
+.ph-state span.f{
+  color:var(--moon);background:rgba(255,208,156,.09);border-color:rgba(255,208,156,.24);
+}
+.ph-ctrl{display:flex;align-items:center;gap:14px;margin-top:2px}
+.ph-ctrl .side{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;color:var(--dim)}
+.ph-ctrl .side svg,.ph-ctrl .main svg{width:12px;height:12px}
+.ph-ctrl .main{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,var(--logo-a),var(--logo-b));
+  display:grid;place-items:center;color:#0A0714;
+  box-shadow:0 8px 18px rgba(140,116,230,.4);
+}
+.ph-ctrl .main svg{width:16px;height:16px}
+.ph-vol{width:100%;display:flex;flex-direction:column;gap:5px}
+.ph-vol-l{display:flex;justify-content:space-between;font-size:9px;color:var(--dim)}
+.ph-vol-l b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:600}
+.ph-bar{height:4px;border-radius:99px;background:rgba(173,154,255,.14);position:relative}
+.ph-bar i{position:absolute;inset:0;width:62%;border-radius:99px;background:linear-gradient(90deg,var(--logo-a),var(--logo-b))}
+.ph-bar i::after{content:"";position:absolute;right:-5px;top:50%;transform:translateY(-50%);width:11px;height:11px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.5)}
+/* mockup: 双耳节拍卡 */
+.ph-beats{background:rgba(16,23,42,.55);border:1px solid var(--border);border-radius:16px;padding:11px 12px;flex:0 0 auto}
+.ph-beats-t{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.ph-beats-t b{font-size:10.5px}
+.ph-beats-t span{font-size:8.5px;color:var(--dim);font-family:var(--mono)}
+.ph-chips{display:flex;gap:5px}
+.ph-chips span{flex:1;text-align:center;font-family:var(--mono);font-size:9px;padding:4px 0;border-radius:8px;border:1px solid var(--border);color:var(--dim)}
+.ph-chips span.on{color:var(--primary);border-color:var(--stroke-strong);background:var(--soft)}
+/* hero 浮动信息卡（对应 lathe 的 code-float） */
+.beat-float{
+  position:absolute;z-index:3;left:-16px;bottom:44px;
+  background:rgba(10,14,24,.94);border:1px solid var(--stroke-strong);
+  border-radius:12px;padding:.8rem .95rem;
+  box-shadow:0 24px 50px rgba(0,0,0,.6);backdrop-filter:blur(14px);
+  transform:rotate(-2.5deg);
+  max-width:250px;
+}
+.beat-float h5{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.04em;font-weight:600;
+  color:var(--faint);margin-bottom:.5rem;padding-bottom:.45rem;
+  border-bottom:1px solid var(--stroke);
+}
+.beat-float pre{
+  font-family:var(--mono);font-size:.74rem;line-height:1.8;color:#C9CFEA;white-space:pre;
+}
+.beat-float .l{color:var(--primary)}
+.beat-float .r{color:var(--mint)}
+.beat-float .d{color:var(--moon)}
+.beat-float .c{color:var(--faint)}
+
+/* ---------- stats ---------- */
+.stats{border-top:1px solid var(--stroke);border-bottom:1px solid var(--stroke);background:rgba(255,255,255,.015)}
+.stats-inner{
+  max-width:var(--max);margin:0 auto;padding:1.6rem 1.5rem;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;
+}
+.stat{text-align:center;position:relative}
+.stat+.stat::before{content:"";position:absolute;left:-.75rem;top:12%;height:76%;width:1px;background:var(--stroke)}
+.stat b{display:block;font-size:1.75rem;font-weight:750;letter-spacing:-.03em;line-height:1.2}
+.stat span{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+
+/* ---------- sections ---------- */
+.section{padding:5.5rem 0}
+section[id]{scroll-margin-top:86px}
+.section-head{max-width:640px;margin:0 auto 3rem;text-align:center}
+.section-head .eyebrow{margin-bottom:1.1rem}
+.section-head h2{font-size:clamp(1.85rem,3.1vw,2.5rem);letter-spacing:-.03em;line-height:1.2;margin-bottom:.85rem}
+.section-head p{color:var(--dim);font-size:1.02rem}
+
+/* sounds */
+.sounds{display:grid;grid-template-columns:repeat(3,1fr);gap:1.15rem}
+.sound{
+  position:relative;padding:1.55rem;border-radius:var(--radius);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
+  border:1px solid var(--stroke);overflow:hidden;
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s;
+}
+.sound::before{
+  content:"";position:absolute;inset:0;opacity:0;transition:opacity .35s;
+  background:radial-gradient(420px 180px at 50% -20%,rgba(173,154,255,.16),transparent 70%);
+}
+.sound:hover{transform:translateY(-5px);border-color:var(--stroke-strong);box-shadow:0 22px 44px rgba(0,0,0,.45)}
+.sound:hover::before{opacity:1}
+.sound-top{position:relative;display:flex;align-items:center;gap:.75rem;margin-bottom:.9rem}
+.tag{
+  flex:0 0 auto;display:grid;place-items:center;min-width:46px;height:32px;padding:0 .45rem;
+  font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;font-weight:600;
+  color:var(--primary);background:var(--soft);
+  border:1px solid var(--stroke-strong);border-radius:8px;
+}
+.sound h3{position:relative;font-size:1.05rem;font-weight:650;letter-spacing:-.015em}
+.sound p{position:relative;color:var(--dim);font-size:.9rem;line-height:1.7}
+/* 频谱示意条：能量随频率的分布 */
+.spec{position:relative;margin-top:1rem;height:26px;display:flex;align-items:flex-end;gap:3px}
+.spec i{flex:1;border-radius:2px 2px 0 0;background:linear-gradient(180deg,var(--primary),var(--primary-2));opacity:.85}
+.spec.w i{height:60%}
+.spec.p i:nth-child(-n+3){height:88%}.spec.p i:nth-child(n+4){height:64%}.spec.p i:nth-child(n+7){height:42%}
+.spec.b i:nth-child(-n+3){height:96%}.spec.b i:nth-child(n+4){height:52%}.spec.b i:nth-child(n+7){height:30%}
+.spec.u i:nth-child(-n+3){height:34%}.spec.u i:nth-child(n+4){height:58%}.spec.u i:nth-child(n+7){height:90%}
+.spec.v i:nth-child(-n+4){height:22%}.spec.v i:nth-child(n+5){height:48%}.spec.v i:nth-child(n+8){height:96%}
+.sound .out{
+  position:relative;margin-top:.85rem;padding-top:.8rem;border-top:1px dashed rgba(255,255,255,.10);
+  font-family:var(--mono);font-size:.72rem;color:var(--faint);letter-spacing:.01em;
+}
+.sound .out b{color:var(--mint);font-weight:600}
+
+/* tuning & misc cards */
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:1.15rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.15rem}
+.card{
+  display:flex;flex-direction:column;padding:1.7rem;border-radius:var(--radius);
+  background:var(--surface);border:1px solid var(--stroke);transition:.3s;
+}
+.card:hover{background:var(--surface2);border-color:var(--stroke-strong);transform:translateY(-3px)}
+.ico{
+  flex:0 0 auto;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+  background:var(--soft);border:1px solid var(--stroke-strong);color:var(--primary);
+  margin-bottom:1rem;
+}
+.ico svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.card h3{font-size:1.02rem;font-weight:650;margin-bottom:.4rem;letter-spacing:-.01em}
+.card p{color:var(--dim);font-size:.9rem;line-height:1.7}
+.card .out{
+  margin-top:auto;padding-top:.85rem;
+  font-family:var(--mono);font-size:.72rem;color:var(--faint);letter-spacing:.01em;
+}
+.card .out b{color:var(--mint);font-weight:600}
+.presets{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.preset{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;
+  color:var(--primary);background:var(--soft);border:1px solid var(--stroke-strong);
+  padding:.4rem .8rem;border-radius:99px;
+}
+
+/* beats highlight */
+.beats-band{
+  position:relative;overflow:hidden;text-align:center;
+  padding:3.25rem 2rem;border-radius:26px;
+  background:
+    radial-gradient(700px 300px at 50% -30%,rgba(173,154,255,.22),transparent 65%),
+    linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+  border:1px solid var(--stroke-strong);
+}
+.beats-band h2{font-size:clamp(1.7rem,3vw,2.2rem);letter-spacing:-.03em;margin-bottom:.8rem}
+.beats-band>p{color:var(--dim);max-width:36rem;margin:0 auto 1.7rem;font-size:1rem}
+.hz{display:flex;justify-content:center;gap:.9rem;flex-wrap:wrap;margin-bottom:1.6rem}
+.hz span{
+  font-family:var(--mono);font-size:.95rem;font-weight:600;
+  color:var(--primary);background:var(--soft);border:1px solid var(--stroke-strong);
+  padding:.7rem 1.3rem;border-radius:14px;
+}
+.hz span em{font-style:normal;font-size:.68rem;color:var(--faint);display:block;font-weight:400;margin-top:.15rem}
+.beats-note{color:var(--faint);font-size:.82rem;margin-top:1.5rem;line-height:1.8}
+.beats-note b{color:var(--dim);font-weight:600}
+
+/* timer & clock */
+.timer-demo{
+  margin-top:1.15rem;display:flex;flex-direction:column;gap:.9rem;
+}
+.trow{display:flex;gap:.5rem;flex-wrap:wrap}
+.trow span{
+  font-family:var(--mono);font-size:.78rem;padding:.45rem .8rem;border-radius:10px;
+  border:1px solid var(--stroke);color:var(--dim);
+}
+.trow span.on{color:var(--primary);border-color:var(--stroke-strong);background:var(--soft)}
+.tmm{display:flex;align-items:baseline;gap:.6rem;font-variant-numeric:tabular-nums}
+.tmm b{font-size:2rem;font-weight:750;letter-spacing:-.02em}
+.tmm span{font-family:var(--mono);font-size:.7rem;color:var(--faint);letter-spacing:.1em;text-transform:uppercase}
+/* 床头钟小样 */
+.clock-demo{
+  margin-top:1.15rem;border-radius:14px;background:#010104;
+  padding:1.4rem 1rem 1.1rem;text-align:center;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+}
+.clock-demo .t{font-size:2.6rem;font-weight:200;letter-spacing:.02em;color:#EEEEEE;font-variant-numeric:tabular-nums;line-height:1.1}
+.clock-demo .s{font-size:.72rem;color:#A7AEC5;margin-top:.35rem}
+.bri{display:flex;justify-content:center;gap:.4rem;margin-top:.9rem}
+.bri i{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+.bri i:nth-child(1){opacity:.25}.bri i:nth-child(2){opacity:.55}.bri i:nth-child(3){opacity:1}
+
+/* themes */
+.themes{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}
+.theme{
+  padding:.95rem;border-radius:14px;background:var(--surface);
+  border:1px solid var(--stroke);transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s;
+}
+.theme:hover{transform:translateY(-4px);border-color:var(--stroke-strong)}
+.theme-preview{
+  height:96px;border-radius:10px;padding:.55rem;margin-bottom:.8rem;
+  display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+}
+.theme-preview .row{display:flex;gap:.35rem;align-items:center}
+.theme-dot{width:20px;height:20px;border-radius:6px}
+.theme-bar{height:5px;border-radius:3px;width:64%;opacity:.9}
+.theme-bar.short{width:38%}
+.theme h4{font-size:.86rem;font-weight:650;letter-spacing:-.01em;margin-bottom:.2rem}
+.theme .hex{font-family:var(--mono);font-size:.63rem;color:var(--faint);display:block;line-height:1.5}
+
+/* gallery */
+.strip{
+  display:flex;gap:1.35rem;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding:.35rem .35rem 1.6rem;margin:0 -.35rem;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.18) transparent;
+}
+.strip::-webkit-scrollbar{height:6px}
+.strip::-webkit-scrollbar-thumb{background:rgba(255,255,255,.16);border-radius:99px}
+.strip::-webkit-scrollbar-track{background:transparent}
+.shot{
+  flex:0 0 auto;width:266px;height:600px;scroll-snap-align:center;
+  display:flex;flex-direction:column;
+  border-radius:24px;overflow:hidden;background:var(--surface);
+  border:1px solid var(--stroke);
+  box-shadow:0 24px 50px rgba(0,0,0,.5);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s;
+}
+.shot:hover{transform:translateY(-8px);border-color:var(--stroke-strong);box-shadow:0 32px 64px rgba(0,0,0,.6)}
+.shot img{flex:1 1 auto;min-height:0;width:100%;object-fit:cover;object-position:top center}
+.shot figcaption{
+  flex:0 0 auto;padding:.75rem .9rem;font-size:.76rem;line-height:1.5;color:var(--faint);
+  background:var(--surface);border-top:1px solid var(--stroke);
+}
+.shot figcaption b{display:block;color:var(--text);font-size:.82rem;font-weight:600;margin-bottom:.15rem}
+/* CSS 绘制的手机屏 */
+.css-shot{flex:1 1 auto;min-height:0;background:linear-gradient(180deg,#1D2140 0%,#0A0E18 36%,#06080F 100%);padding:14px 12px;display:flex;flex-direction:column;gap:10px;font-size:10px}
+.cs-head{display:flex;align-items:center;gap:7px}
+.cs-logo{width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,var(--logo-a),var(--logo-b))}
+.cs-title{font-weight:700;font-size:11.5px}
+.cs-sub{font-size:8.5px;color:var(--dim)}
+.cs-card{background:rgba(16,23,42,.72);border:1px solid var(--border);border-radius:13px;padding:10px}
+.cs-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.cs-h b{font-size:10px}
+.cs-h span{font-size:8px;font-family:var(--mono);color:var(--mint);background:rgba(112,222,197,.1);border:1px solid rgba(112,222,197,.22);padding:2px 6px;border-radius:99px}
+.cs-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.cs-tile{border:1px solid var(--border);border-radius:10px;padding:9px 8px;display:flex;flex-direction:column;gap:3px}
+.cs-tile b{font-size:10px}
+.cs-tile span{font-size:7.5px;color:var(--dim);line-height:1.5}
+.cs-tile.on{border-color:var(--stroke-strong);background:rgba(173,154,255,.08)}
+.cs-tile .dot{width:5px;height:5px;border-radius:50%;background:var(--mint);align-self:flex-end;margin-top:2px}
+.cs-chips{display:flex;gap:5px;flex-wrap:wrap}
+.cs-chips span{font-family:var(--mono);font-size:8px;padding:4px 8px;border-radius:8px;border:1px solid var(--border);color:var(--dim)}
+.cs-chips span.on{color:var(--primary);border-color:var(--stroke-strong);background:var(--soft)}
+.cs-stat{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:2px}
+.cs-stat div{border:1px solid var(--border);border-radius:10px;padding:9px;text-align:center}
+.cs-stat b{display:block;font-size:16px;font-variant-numeric:tabular-nums}
+.cs-stat span{font-size:7.5px;color:var(--dim)}
+.cs-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(41,51,78,.6);font-size:9px;color:var(--dim)}
+.cs-row:last-child{border-bottom:0}
+.cs-row b{color:var(--text);font-weight:600}
+.hint{display:flex;justify-content:center;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:.5rem}
+.hint svg{width:14px;height:14px}
+
+/* privacy */
+.priv-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:2.5rem;align-items:center}
+.check-list{list-style:none;margin:1.4rem 0 1.8rem}
+.check-list li{
+  display:flex;gap:.7rem;align-items:flex-start;
+  color:var(--dim);font-size:.95rem;margin-bottom:.75rem;line-height:1.65;
+}
+.check-list svg{flex:0 0 auto;width:18px;height:18px;color:var(--mint);margin-top:.2rem}
+.priv-shot{
+  position:relative;display:flex;justify-content:center;
+}
+.priv-shot .phone{width:260px;transform:perspective(1400px) rotateY(8deg) rotateX(3deg)}
+.priv-shot:hover .phone{transform:perspective(1400px) rotateY(3deg) rotateX(1deg) translateY(-6px)}
+.priv-shot .phone-screen{padding:0}
+.priv-shot img{width:100%;height:100%;object-fit:cover;object-position:top}
+
+/* faq */
+.faq{max-width:820px;margin:0 auto}
+details{
+  border:1px solid var(--stroke);border-radius:14px;background:var(--surface);
+  padding:1.05rem 1.25rem;margin-bottom:.75rem;transition:.25s;
+}
+details[open]{background:var(--surface2);border-color:var(--stroke-strong)}
+details summary{
+  cursor:pointer;list-style:none;font-weight:600;font-size:.98rem;
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;
+}
+details summary::-webkit-details-marker{display:none}
+details summary::after{
+  content:"+";font-family:var(--mono);font-size:1.15rem;color:var(--primary);
+  transition:transform .25s;line-height:1;
+}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--dim);font-size:.9rem;line-height:1.75;margin-top:.75rem;max-width:94%}
+
+/* support */
+.support{padding:0 0 5.5rem}
+.support-card{
+  position:relative;overflow:hidden;text-align:center;
+  padding:3.5rem 2rem;border-radius:26px;
+  background:
+    radial-gradient(700px 300px at 50% -30%,rgba(173,154,255,.22),transparent 65%),
+    linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+  border:1px solid var(--stroke-strong);
+}
+.support-card h2{font-size:clamp(1.7rem,3vw,2.2rem);letter-spacing:-.03em;margin-bottom:.8rem}
+.support-card p{color:var(--dim);max-width:34rem;margin:0 auto 1.9rem;font-size:1rem}
+.support-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:.8rem}
+
+/* footer */
+footer{border-top:1px solid var(--stroke);background:rgba(255,255,255,.015);padding:3rem 0 2rem}
+.foot-grid{display:flex;justify-content:space-between;gap:2.5rem;flex-wrap:wrap;margin-bottom:2.25rem}
+.foot-brand{max-width:300px}
+.foot-brand .brand{margin-bottom:.8rem}
+.foot-brand p{color:var(--faint);font-size:.85rem;line-height:1.7}
+.foot-col h4{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:.9rem;font-weight:600}
+.foot-col a{display:block;color:var(--dim);font-size:.88rem;margin-bottom:.55rem;transition:color .2s}
+.foot-col a:hover{color:var(--primary)}
+.foot-bottom{
+  border-top:1px solid var(--stroke);padding-top:1.5rem;
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  font-size:.8rem;color:var(--faint);
+}
+.foot-bottom a{color:var(--faint)}
+.foot-bottom a:hover{color:var(--dim)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media (max-width:1040px){
+  .sounds{grid-template-columns:repeat(2,1fr)}
+  .grid3,.themes{grid-template-columns:repeat(2,1fr)}
+  .hero-grid{grid-template-columns:1fr;gap:3.5rem}
+  .hero{padding-top:3.5rem}
+  .hero-visual{min-height:auto;padding:1rem 0 2rem}
+  .lede{margin-left:auto;margin-right:auto}
+  .hero-grid>*:first-child{text-align:center;display:flex;flex-direction:column;align-items:center;width:100%}
+  .hero-actions,.hero-meta{justify-content:center;width:100%}
+  .lede{max-width:36rem}
+  .priv-grid{grid-template-columns:1fr;gap:3rem}
+  .priv-shot{order:-1}
+}
+@media (max-width:860px){
+  .nav-links{display:none}
+  .stats-inner{grid-template-columns:repeat(2,1fr);gap:1.75rem}
+  .stat:nth-child(3)::before{display:none}
+  .grid2{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .section{padding:4rem 0}
+  .sounds,.grid3,.themes{grid-template-columns:1fr}
+  .shot{width:228px;height:520px}
+  .hero-meta i{display:none}
+  .beat-float{display:none}
+  .phone{width:250px}
+  .nav-actions .btn-sm{display:none}
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .hero-actions .btn{width:100%}
+  .foot-grid{gap:1.75rem}
+  .foot-bottom{flex-direction:column}
+  details p{max-width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#" class="brand">
+      <img src="assets/logo.png" alt="Sonare 声眠">
+      <span class="word" data-en="Sonare" data-zh="声眠 <span>Sonare</span>" data-zh-hant="聲眠 <span>Sonare</span>">声眠 <span>Sonare</span></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#sounds" data-en="Sounds" data-zh="五种噪音" data-zh-hant="五種噪音">五种噪音</a>
+      <a href="#tuning" data-en="Tuning" data-zh="声音调节" data-zh-hant="聲音調節">声音调节</a>
+      <a href="#beats" data-en="Beats" data-zh="双耳节拍" data-zh-hant="雙耳節拍">双耳节拍</a>
+      <a href="#timer" data-en="Timer &amp; Clock" data-zh="定时与床头钟" data-zh-hant="定時與床頭鐘">定时与床头钟</a>
+      <a href="#themes" data-en="Themes" data-zh="外观" data-zh-hant="外觀">外观</a>
+      <a href="#privacy" data-en="Privacy" data-zh="隐私" data-zh-hant="隱私">隐私</a>
+      <a href="#faq" data-en="FAQ" data-zh="常见问题" data-zh-hant="常見問題">常见问题</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="lang-btn" id="lang-toggle" onclick="toggleLanguage()" aria-label="Switch language" title="切换语言 / 切換語言 / Switch language">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18"/></svg>
+        <span id="lang-label">简体</span>
+      </button>
+      <!-- TODO: App 上架后把 href 替换为 App Store 链接（形如 https://apps.apple.com/app/idXXXXXXXXXX） -->
+      <a class="btn btn-primary btn-sm" href="#" id="store-link" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.9c0-2 1.6-3 1.7-3.1-1-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7-.6 0-1.5-.7-2.5-.7-1.3 0-2.5.8-3.2 2-1.4 2.4-.4 6 1 8 .7 1 1.5 2.1 2.6 2 1-.1 1.4-.7 2.7-.7 1.2 0 1.6.7 2.7.7 1.1 0 1.8-1 2.5-2 .8-1.2 1.1-2.3 1.1-2.4-.1 0-2.3-.9-2.7-3zM14.5 6.9c.5-.7.9-1.6.8-2.5-.8 0-1.8.5-2.4 1.2-.5.6-.9 1.5-.8 2.4.9.1 1.8-.4 2.4-1.1z"/></svg>
+        <span data-en="App Store" data-zh="App Store" data-zh-hant="App Store">App Store</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow"><span class="pulse"></span><span data-en="White noise &amp; sleep · five noises, synthesized locally" data-zh="白噪音助眠 · 五种声音，全部本地合成" data-zh-hant="白噪音助眠 · 五種聲音，全部本地合成">白噪音助眠 · 五种声音，全部本地合成</span></div>
+      <h1 data-en="Wind the day down,<br><em>keep a little quiet.</em>" data-zh="把一天慢慢关掉，<br><em>留一段安静。</em>" data-zh-hant="把一天慢慢關掉，<br><em>留一段安靜。</em>">把一天慢慢关掉，<br><em>留一段安静。</em></h1>
+      <p class="lede" data-en="White, pink, brown, blue and violet noise — every sound is synthesized in real time on your device. Layer binaural beats, set a fade timer, and let the bedside clock take over. <b>No network, no permissions, no ads, no in-app purchases.</b>" data-zh="白 / 粉 / 棕 / 蓝 / 紫五种噪音，全部在你的设备上实时合成；叠加双耳节拍，设一个渐弱定时，再用床头钟陪你入睡。<b>不联网、不申请权限、无广告、无内购。</b>" data-zh-hant="白 / 粉 / 棕 / 藍 / 紫五種噪音，全部在你的裝置上即時合成；疊加雙耳節拍，設一個漸弱定時，再用床頭鐘陪你入睡。<b>不連網、不申請權限、無廣告、無內購。</b>">白 / 粉 / 棕 / 蓝 / 紫五种噪音，全部在你的设备上实时合成；叠加双耳节拍，设一个渐弱定时，再用床头钟陪你入睡。<b>不联网、不申请权限、无广告、无内购。</b></p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#" id="store-hero">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.9c0-2 1.6-3 1.7-3.1-1-1.4-2.4-1.6-2.9-1.6-1.2-.1-2.4.7-3 .7-.6 0-1.5-.7-2.5-.7-1.3 0-2.5.8-3.2 2-1.4 2.4-.4 6 1 8 .7 1 1.5 2.1 2.6 2 1-.1 1.4-.7 2.7-.7 1.2 0 1.6.7 2.7.7 1.1 0 1.8-1 2.5-2 .8-1.2 1.1-2.3 1.1-2.4-.1 0-2.3-.9-2.7-3zM14.5 6.9c.5-.7.9-1.6.8-2.5-.8 0-1.8.5-2.4 1.2-.5.6-.9 1.5-.8 2.4.9.1 1.8-.4 2.4-1.1z"/></svg>
+          <span data-en="Download on the App Store" data-zh="前往 App Store 下载" data-zh-hant="前往 App Store 下載">前往 App Store 下载</span>
+        </a>
+        <a class="btn btn-ghost" href="#sounds"><span data-en="Explore the five noises" data-zh="先听听五种噪音" data-zh-hant="先聽聽五種噪音">先听听五种噪音</span></a>
+      </div>
+      <div class="hero-meta">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg><span data-en="Offline, no sign-up" data-zh="离线可用 · 无需账号" data-zh-hant="離線可用 · 無需帳號">离线可用 · 无需账号</span></span>
+        <i></i>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/></svg><span data-en="Zero data collection" data-zh="零数据收集" data-zh-hant="零數據收集">零数据收集</span></span>
+        <i></i>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/></svg><span data-en="简体 · 繁體 · English" data-zh="简体 · 繁體 · English" data-zh-hant="简体 · 繁體 · English">简体 · 繁體 · English</span></span>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="glow"></div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="phone-screen">
+          <div class="ph-head">
+            <div class="ph-logo"><svg viewBox="0 0 24 24" fill="#fff"><path d="M20.6 14.2A9.2 9.2 0 0 1 9.8 3.4 9.2 9.2 0 1 0 20.6 14.2z"/></svg></div>
+            <div>
+              <div class="ph-title" data-en="Sonare" data-zh="声眠" data-zh-hant="聲眠">声眠</div>
+              <div class="ph-sub" data-en="Now playing · Pink noise" data-zh="正在播放 · 粉噪音" data-zh-hant="正在播放 · 粉噪音">正在播放 · 粉噪音</div>
+            </div>
+            <span class="ph-badge" data-en="Real audio" data-zh="真实声音" data-zh-hant="真實聲音">真实声音</span>
+          </div>
+          <div class="ph-card">
+            <div class="ring"><div class="ring-core"><svg viewBox="0 0 24 24" fill="#FFD09C"><path d="M20.6 14.2A9.2 9.2 0 0 1 9.8 3.4 9.2 9.2 0 1 0 20.6 14.2z"/></svg></div></div>
+            <div class="ph-noise" data-en="Pink noise" data-zh="粉噪音" data-zh-hant="粉噪音">粉噪音</div>
+            <div class="ph-state">
+              <span data-en="Local synth · playing" data-zh="本地合成 · 真实播放中" data-zh-hant="本地合成 · 真實播放中">本地合成 · 真实播放中</span>
+              <span class="f">32:15</span>
+            </div>
+            <div class="ph-ctrl">
+              <div class="side"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6l-10 6 10 6z"/></svg></div>
+              <div class="main"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg></div>
+              <div class="side"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6l10 6-10 6z"/></svg></div>
+            </div>
+            <div class="ph-vol">
+              <div class="ph-vol-l"><span data-en="Master volume" data-zh="总音量" data-zh-hant="總音量">总音量</span><b>62%</b></div>
+              <div class="ph-bar"><i></i></div>
+            </div>
+          </div>
+          <div class="ph-beats">
+            <div class="ph-beats-t"><b data-en="Binaural beats" data-zh="双耳节拍" data-zh-hant="雙耳節拍">双耳节拍</b><span>200 Hz</span></div>
+            <div class="ph-chips"><span class="on">2 Hz</span><span>5 Hz</span><span>10 Hz</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="beat-float" aria-hidden="true">
+        <h5 data-en="Binaural beats · stereo headphones" data-zh="双耳节拍 · 请佩戴立体声耳机" data-zh-hant="雙耳節拍 · 請佩戴立體聲耳機">双耳节拍 · 请佩戴立体声耳机</h5>
+        <pre><span class="c">L</span> <span class="l">200.0 Hz</span>  <span class="c">→ 左耳</span>
+<span class="c">R</span> <span class="r">205.0 Hz</span>  <span class="c">→ 右耳</span>
+<span class="c">Δ</span> <span class="d">5 Hz</span>      <span class="c">← 大脑“听”出的节拍</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stats-inner">
+    <div class="stat"><b>5</b><span data-en="Local noises" data-zh="本地合成噪音" data-zh-hant="本地合成噪音">本地合成噪音</span></div>
+    <div class="stat"><b>3</b><span data-en="Appearance themes" data-zh="外观主题" data-zh-hant="外觀主題">外观主题</span></div>
+    <div class="stat"><b>3</b><span data-en="Interface languages" data-zh="界面语言" data-zh-hant="介面語言">界面语言</span></div>
+    <div class="stat"><b>0</b><span data-en="Data collected" data-zh="数据收集" data-zh-hant="數據收集">数据收集</span></div>
+  </div>
+</section>
+
+<section class="section" id="sounds">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span data-en="Sounds" data-zh="声音库" data-zh-hant="聲音庫">声音库</span></div>
+      <h2 data-en="Five noises, generated in real time" data-zh="五种噪音，实时生成" data-zh-hant="五種噪音，即時生成">五种噪音，实时生成</h2>
+      <p data-en="None of them is an audio file. Each noise is synthesized sample by sample on the device and looped seamlessly, so it never clicks, never stutters and never downloads anything." data-zh="它们都不是音频文件：每一种噪音都在设备上逐个采样实时合成，再无缝循环播放——不会出现接缝杂音，也永远不需要下载任何素材。" data-zh-hant="它們都不是音頻文件：每一種噪音都在裝置上逐個取樣即時合成，再無縫循環播放——不會出現接縫雜音，也永遠不需要下載任何素材。">它们都不是音频文件：每一种噪音都在设备上逐个采样实时合成，再无缝循环播放——不会出现接缝杂音，也永远不需要下载任何素材。</p>
+    </div>
+
+    <div class="sounds">
+      <article class="sound reveal">
+        <div class="sound-top"><div class="tag">White</div><h3 data-en="White noise" data-zh="白噪音" data-zh-hant="白噪音">白噪音</h3></div>
+        <p data-en="A full-spectrum background that masks room noise evenly — the classic choice for falling asleep." data-zh="全频背景，均匀盖住环境杂音，是最经典的入睡选择。" data-zh-hant="全頻背景，均勻蓋住環境雜音，是最經典的入睡選擇。">全频背景，均匀盖住环境杂音，是最经典的入睡选择。</p>
+        <div class="spec w"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="out"><b>●</b> <span data-en="Full spectrum · local synth" data-zh="全频背景 · 本地合成" data-zh-hant="全頻背景 · 本地合成">全频背景 · 本地合成</span></div>
+      </article>
+
+      <article class="sound reveal">
+        <div class="sound-top"><div class="tag">Pink</div><h3 data-en="Pink noise" data-zh="粉噪音" data-zh-hant="粉噪音">粉噪音</h3></div>
+        <p data-en="Softer highs, easier on the ears for hours at a time — built with the Paul Kellet approximation." data-zh="高频更柔和，长时间听不刺耳；采用 Paul Kellet 近似算法生成。" data-zh-hant="高頻更柔和，長時間聽不刺耳；採用 Paul Kellet 近似算法生成。">高频更柔和，长时间听不刺耳；采用 Paul Kellet 近似算法生成。</p>
+        <div class="spec p"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="out"><b>●</b> <span data-en="Gentle highs · local synth" data-zh="偏柔和 · 本地合成" data-zh-hant="偏柔和 · 本地合成">偏柔和 · 本地合成</span></div>
+      </article>
+
+      <article class="sound reveal">
+        <div class="sound-top"><div class="tag">Brown</div><h3 data-en="Brown noise" data-zh="棕噪音" data-zh-hant="棕噪音">棕噪音</h3></div>
+        <p data-en="A deeper low end with a heavier texture — good for masking traffic and low-frequency rumble." data-zh="低频更突出，声音更沉，适合盖住马路与低频轰鸣。" data-zh-hant="低頻更突出，聲音更沉，適合蓋住馬路與低頻轟鳴。">低频更突出，声音更沉，适合盖住马路与低频轰鸣。</p>
+        <div class="spec b"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="out"><b>●</b> <span data-en="Low end forward · local synth" data-zh="低频更突出 · 本地合成" data-zh-hant="低頻更突出 · 本地合成">低频更突出 · 本地合成</span></div>
+      </article>
+
+      <article class="sound reveal">
+        <div class="sound-top"><div class="tag">Blue</div><h3 data-en="Blue noise" data-zh="蓝噪音" data-zh-hant="藍噪音">蓝噪音</h3></div>
+        <p data-en="Brighter highs, crisp and airy — a fresh, clean layer for the daytime." data-zh="高频更突出，清爽明亮，白天听更通透。" data-zh-hant="高頻更突出，清爽明亮，白天聽更通透。">高频更突出，清爽明亮，白天听更通透。</p>
+        <div class="spec u"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="out"><b>●</b> <span data-en="Bright highs · near-approx" data-zh="高频更突出 · 近似合成" data-zh-hant="高頻更突出 · 近似合成">高频更突出 · 近似合成</span></div>
+      </article>
+
+      <article class="sound reveal">
+        <div class="sound-top"><div class="tag">Violet</div><h3 data-en="Violet noise" data-zh="紫噪音" data-zh-hant="紫噪音">紫噪音</h3></div>
+        <p data-en="Fine-grained sparkle with a brighter layered texture." data-zh="颗粒感更细，层次更亮。" data-zh-hant="顆粒感更細，層次更亮。">颗粒感更细，层次更亮。</p>
+        <div class="spec v"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="out"><b>●</b> <span data-en="Fine grain · near-approx" data-zh="明亮颗粒感 · 近似合成" data-zh-hant="明亮顆粒感 · 近似合成">明亮颗粒感 · 近似合成</span></div>
+      </article>
+
+      <article class="sound reveal">
+        <div class="sound-top"><div class="tag">5s</div><h3 data-en="Seamless looping" data-zh="无缝循环" data-zh-hant="無縫循環">无缝循环</h3></div>
+        <p data-en="Each noise is about five seconds long, with the tail cross-faded into the head — you will never hear the loop point." data-zh="每种噪音约 5 秒循环，结尾与开头做了交叉淡化——你永远听不到循环点在哪。" data-zh-hant="每種噪音約 5 秒循環，結尾與開頭做了交叉淡化——你永遠聽不到循環點在哪。">每种噪音约 5 秒循环，结尾与开头做了交叉淡化——你永远听不到循环点在哪。</p>
+        <div class="spec"><i style="height:40%"></i><i style="height:62%"></i><i style="height:52%"></i><i style="height:74%"></i><i style="height:58%"></i><i style="height:80%"></i><i style="height:66%"></i><i style="height:88%"></i><i style="height:46%"></i></div>
+        <div class="out"><b>∞</b> <span data-en="Cross-faded loop · no clicks" data-zh="交叉淡化 · 无接缝" data-zh-hant="交叉淡化 · 無接縫">交叉淡化 · 无接缝</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" id="tuning" style="border-top:1px solid var(--stroke);border-bottom:1px solid var(--stroke);background:linear-gradient(180deg,rgba(255,255,255,.02),transparent 70%)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span data-en="Tuning" data-zh="声音调节" data-zh-hant="聲音調節">声音调节</span></div>
+      <h2 data-en="Shape the noise until it fits the room" data-zh="把噪音调成你喜欢的样子" data-zh-hant="把噪音調成你喜歡的樣子">把噪音调成你喜欢的样子</h2>
+      <p data-en="Four live sliders act on the playing noise immediately — nothing to reload, nothing to wait for." data-zh="四个滑杆实时作用于正在播放的噪音——不需要重载，也不用等待。" data-zh-hant="四個滑桿即時作用於正在播放的噪音——不需要重載，也不用等待。">四个滑杆实时作用于正在播放的噪音——不需要重载，也不用等待。</p>
+    </div>
+
+    <div class="grid2">
+      <div class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5v17" stroke-dasharray="2 3"/></svg></div>
+        <h3 data-en="Pan · sound field position" data-zh="声场位置" data-zh-hant="聲場位置">声场位置</h3>
+        <p data-en="Continuous left/right positioning — put the sound on whichever side of the pillow you like." data-zh="左 / 右连续可调——声音摆在枕头的哪一边，由你决定。" data-zh-hant="左 / 右連續可調——聲音擺在枕頭的哪一邊，由你決定。">左 / 右连续可调——声音摆在枕头的哪一边，由你决定。</p>
+        <div class="out"><b>L −100 ↔ +100 R</b></div>
+      </div>
+      <div class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 12c3-6 6 6 9 0s6 6 9 0"/></svg></div>
+        <h3 data-en="Drift · variation" data-zh="变化幅度" data-zh-hant="變化幅度">变化幅度</h3>
+        <p data-en="A slow 0.09 Hz swell modulates the volume so the noise breathes gently instead of looping mechanically." data-zh="以 0.09 Hz 的缓慢起伏调制音量，让噪音轻轻呼吸，而不是机械地循环。" data-zh-hant="以 0.09 Hz 的緩慢起伏調制音量，讓噪音輕輕呼吸，而不是機械地循環。">以 0.09 Hz 的缓慢起伏调制音量，让噪音轻轻呼吸，而不是机械地循环。</p>
+        <div class="out"><b>LFO 0.09 Hz</b> · <span data-en="0–100" data-zh="0–100">0–100</span></div>
+      </div>
+      <div class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M9 18V6l8-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="14.5" cy="16" r="2.5"/></svg></div>
+        <h3 data-en="Pitch" data-zh="音调" data-zh-hant="音調">音调</h3>
+        <p data-en="Fine-tune the tone via playback rate, from −6 to +6 semitones." data-zh="通过播放速率微调高低，±6 半音共 12 档。" data-zh-hant="通過播放速率微調高低，±6 半音共 12 檔。">通过播放速率微调高低，±6 半音共 12 档。</p>
+        <div class="out"><b>−6 ↔ +6 st</b> · <span data-en="rate = 2^(n/12)" data-zh="速率 = 2^(n/12)">速率 = 2^(n/12)</span></div>
+      </div>
+      <div class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg></div>
+        <h3 data-en="Master volume" data-zh="总音量" data-zh-hant="總音量">总音量</h3>
+        <p data-en="One slider controls both the current noise and the binaural beat layer together." data-zh="一个滑杆同时控制当前噪音与双耳节拍两层声音。" data-zh-hant="一個滑桿同時控制當前噪音與雙耳節拍兩層聲音。">一个滑杆同时控制当前噪音与双耳节拍两层声音。</p>
+        <div class="presets">
+          <span class="preset" data-en="Pillow" data-zh="枕边" data-zh-hant="枕邊">枕边</span>
+          <span class="preset" data-en="Steady" data-zh="平稳" data-zh-hant="平穩">平稳</span>
+          <span class="preset" data-en="Gentle waves" data-zh="轻轻起伏" data-zh-hant="輕輕起伏">轻轻起伏</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="beats">
+  <div class="wrap">
+    <div class="beats-band reveal">
+      <h2 data-en="Binaural beats, layered over your noise" data-zh="双耳节拍，与当前噪音叠加" data-zh-hant="雙耳節拍，與當前噪音疊加">双耳节拍，与当前噪音叠加</h2>
+      <p data-en="A 200 Hz carrier goes to each ear with a tiny frequency offset. Your brain perceives the difference as a third, gentle pulse — while the noise keeps playing underneath." data-zh="200 Hz 载波分别送入左右耳，频率只差一点点——大脑会把这点差异“听”成第三种轻微的节拍，而底下的噪音照常播放。" data-zh-hant="200 Hz 載波分別送入左右耳，頻率只差一點點——大腦會把這點差異「聽」成第三種輕微的節拍，而底下的噪音照常播放。">200 Hz 载波分别送入左右耳，频率只差一点点——大脑会把这点差异“听”成第三种轻微的节拍，而底下的噪音照常播放。</p>
+      <div class="hz">
+        <span>Δ 2 Hz<em data-en="carrier 200 Hz" data-zh="载波 200 Hz" data-zh-hant="載波 200 Hz">载波 200 Hz</em></span>
+        <span>Δ 5 Hz<em data-en="carrier 200 Hz" data-zh="载波 200 Hz" data-zh-hant="載波 200 Hz">载波 200 Hz</em></span>
+        <span>Δ 10 Hz<em data-en="carrier 200 Hz" data-zh="载波 200 Hz" data-zh-hant="載波 200 Hz">载波 200 Hz</em></span>
+      </div>
+      <div class="beats-note">
+        <span data-en="<b>Stereo headphones required</b> to perceive the beat — if your device lacks stereo panning, the app tells you instead of pretending. Binaural beats are an audio layering feature; they do not represent deep sleep, meditation or any physiological state, and they are not medical advice." data-zh="<b>需要佩戴立体声耳机</b>才能听出差频；若设备不支持立体声声像，应用会如实提示而不会假装可用。双耳节拍只是声音叠加功能，不代表深睡、冥想或其他生理状态，也不构成任何医疗或健康建议。" data-zh-hant="<b>需要佩戴立體聲耳機</b>才能聽出差頻；若裝置不支援立體聲聲像，應用會如實提示而不會假裝可用。雙耳節拍只是聲音疊加功能，不代表深睡、冥想或其他生理狀態，也不構成任何醫療或健康建議。"><b>需要佩戴立体声耳机</b>才能听出差频；若设备不支持立体声声像，应用会如实提示而不会假装可用。双耳节拍只是声音叠加功能，不代表深睡、冥想或其他生理状态，也不构成任何医疗或健康建议。</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" id="timer" style="border-top:1px solid var(--stroke);border-bottom:1px solid var(--stroke);background:linear-gradient(180deg,rgba(255,255,255,.02),transparent 70%)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span data-en="Sleep" data-zh="休息" data-zh-hant="休息">休息</span></div>
+      <h2 data-en="It stops when you stop listening" data-zh="你睡着了，它就自己停" data-zh-hant="你睡著了，它就自己停">你睡着了，它就自己停</h2>
+      <p data-en="A fade timer that counts real playback time, and a bedside clock that takes over your nightstand." data-zh="按真实播放时间倒计时的渐弱定时，以及一块可以接管床头柜的床头钟。" data-zh-hant="按真實播放時間倒計時的漸弱定時，以及一塊可以接管床頭櫃的床頭鐘。">按真实播放时间倒计时的渐弱定时，以及一块可以接管床头柜的床头钟。</p>
+    </div>
+
+    <div class="grid2">
+      <div class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/></svg></div>
+        <h3 data-en="Fade timer" data-zh="渐弱定时" data-zh-hant="漸弱定時">渐弱定时</h3>
+        <p data-en="15 / 30 / 45 / 60 minutes. The countdown only runs while audio is actually playing — pausing keeps the remaining time, switching sounds does not reset it. Over the final 5 minutes the volume ramps down, then everything fades out and stops." data-zh="15 / 30 / 45 / 60 分钟可选。倒计时只按真实播放时间进行——暂停保留剩余时间，切换声音不重置。最后 5 分钟音量逐渐降低，结束时淡出停止。" data-zh-hant="15 / 30 / 45 / 60 分鐘可選。倒計時只按真實播放時間進行——暫停保留剩餘時間，切換聲音不重置。最後 5 分鐘音量逐漸降低，結束時淡出停止。">15 / 30 / 45 / 60 分钟可选。倒计时只按真实播放时间进行——暂停保留剩余时间，切换声音不重置。最后 5 分钟音量逐渐降低，结束时淡出停止。</p>
+        <div class="timer-demo">
+          <div class="trow"><span data-en="Off" data-zh="关闭" data-zh-hant="關閉">关闭</span><span>15 min</span><span class="on">30 min</span><span>45 min</span><span>60 min</span></div>
+          <div class="tmm"><b>18:42</b><span data-en="remaining" data-zh="剩余" data-zh-hant="剩餘">剩余</span></div>
+        </div>
+      </div>
+      <div class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div>
+        <h3 data-en="Bedside clock" data-zh="床头钟" data-zh-hant="床頭鐘">床头钟</h3>
+        <p data-en="A full-screen clock with large thin digits and three text brightness levels. It drifts slightly on a 96-second cycle so it never burns into the display, and shows the sound that is currently playing." data-zh="全屏大字细体时钟，三档文字亮度可调；每 96 秒轻微位移，长时间显示不易留下残影，同时显示当前正在播放的声音。" data-zh-hant="全螢幕大字細體時鐘，三檔文字亮度可調；每 96 秒輕微位移，長時間顯示不易留下殘影，同時顯示當前正在播放的聲音。">全屏大字细体时钟，三档文字亮度可调；每 96 秒轻微位移，长时间显示不易留下残影，同时显示当前正在播放的声音。</p>
+        <div class="clock-demo">
+          <div class="t">23:47</div>
+          <div class="s" data-en="Sonare · Now playing · Pink noise" data-zh="声眠 · 正在播放 · 粉噪音" data-zh-hant="聲眠 · 正在播放 · 粉噪音">声眠 · 正在播放 · 粉噪音</div>
+          <div class="bri"><i></i><i></i><i></i></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid3" style="margin-top:1.15rem">
+      <div class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></div>
+        <h3 data-en="Background playback" data-zh="后台播放" data-zh-hant="背景播放">后台播放</h3>
+        <p data-en="Lock the screen or switch apps and the sound keeps playing. A call or other system interruption pauses it automatically — tap play to resume." data-zh="锁屏或切到其他应用，声音继续播放；来电等系统中断会自动暂停，点击播放即可继续。" data-zh-hant="鎖屏或切到其他應用，聲音繼續播放；來電等系統中斷會自動暫停，點擊播放即可繼續。">锁屏或切到其他应用，声音继续播放；来电等系统中断会自动暂停，点击播放即可继续。</p>
+      </div>
+      <div class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.5 0-1-.1-1.4A5.4 5.4 0 0 1 13.4 3.1C12.9 3 12.5 3 12 3z"/></svg></div>
+        <h3 data-en="Real-time spectrum" data-zh="真实频谱" data-zh-hant="真實頻譜">真实频谱</h3>
+        <p data-en="The radial visualization reads the actual FFT of what is playing — 56 bars, plus a slow breathing glow." data-zh="环形可视化读取的是真实 FFT 频谱——56 根径向条，外加一个缓慢的呼吸光晕。" data-zh-hant="環形可視化讀取的是真實 FFT 頻譜——56 根徑向條，外加一個緩慢的呼吸光暈。">环形可视化读取的是真实 FFT 频谱——56 根径向条，外加一个缓慢的呼吸光晕。</p>
+      </div>
+      <div class="card reveal">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/></svg></div>
+        <h3 data-en="Local stats only" data-zh="仅本机统计" data-zh-hant="僅本機統計">仅本机统计</h3>
+        <p data-en="Days visited and play sessions are counted on this device — a small record of how often you reached for a quiet moment." data-zh="访问天数与播放会话只统计在本机——记录你为安静片刻按下播放的次数。" data-zh-hant="訪問天數與播放會話只統計在本機——記錄你為安靜片刻按下播放的次數。">访问天数与播放会话只统计在本机——记录你为安静片刻按下播放的次数。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="themes">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span data-en="Appearance" data-zh="外观 · 3 套主题" data-zh-hant="外觀 · 3 套主題">外观 · 3 套主题</span></div>
+      <h2 data-en="Three looks, picked for the light in your room" data-zh="三套外观，按房间的光线挑" data-zh-hant="三套外觀，按房間的光線挑">三套外观，按房间的光线挑</h2>
+      <p data-en="Night, Aurora and Dawn — switch in Mine → Appearance and the whole interface follows, spectrum included." data-zh="夜航 / 极光 / 晨光——在「我的 → 外观」切换，整个界面（包括频谱）都会跟着换。" data-zh-hant="夜航 / 極光 / 晨光——在「我的 → 外觀」切換，整個介面（包括頻譜）都會跟著換。">夜航 / 极光 / 晨光——在「我的 → 外观」切换，整个界面（包括频谱）都会跟着换。</p>
+    </div>
+
+    <div class="themes">
+      <div class="theme reveal">
+        <div class="theme-preview" style="background:#06080F">
+          <div class="row"><span class="theme-dot" style="background:#AD9AFF"></span><span class="theme-dot" style="background:#70DEC5"></span><span class="theme-dot" style="background:#FFD09C"></span></div>
+          <div><div class="theme-bar" style="background:#AD9AFF"></div><div class="theme-bar short" style="background:#70DEC5;margin-top:5px"></div></div>
+        </div>
+        <h4 data-en="Night" data-zh="夜航" data-zh-hant="夜航">夜航</h4>
+        <span class="hex">#06080F · #AD9AFF</span>
+      </div>
+      <div class="theme reveal">
+        <div class="theme-preview" style="background:#06120E">
+          <div class="row"><span class="theme-dot" style="background:#73E0BF"></span><span class="theme-dot" style="background:#AD9AFF"></span><span class="theme-dot" style="background:#FFD09C"></span></div>
+          <div><div class="theme-bar" style="background:#73E0BF"></div><div class="theme-bar short" style="background:#AD9AFF;margin-top:5px"></div></div>
+        </div>
+        <h4 data-en="Aurora" data-zh="极光" data-zh-hant="極光">极光</h4>
+        <span class="hex">#06120E · #73E0BF</span>
+      </div>
+      <div class="theme reveal">
+        <div class="theme-preview" style="background:#FAF7F1">
+          <div class="row"><span class="theme-dot" style="background:#7050C8"></span><span class="theme-dot" style="background:#177458"></span><span class="theme-dot" style="background:#925100"></span></div>
+          <div><div class="theme-bar" style="background:#7050C8"></div><div class="theme-bar short" style="background:#177458;margin-top:5px"></div></div>
+        </div>
+        <h4 data-en="Dawn" data-zh="晨光" data-zh-hant="晨光">晨光</h4>
+        <span class="hex">#FAF7F1 · #7050C8</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" id="gallery" style="border-top:1px solid var(--stroke);border-bottom:1px solid var(--stroke);background:linear-gradient(180deg,rgba(255,255,255,.02),transparent 70%)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span data-en="Screens" data-zh="应用界面" data-zh-hant="應用介面">应用界面</span></div>
+      <h2 data-en="Four tabs, one quiet layout" data-zh="四个标签页，一套安静的布局" data-zh-hant="四個標籤頁，一套安靜的佈局">四个标签页，一套安静的布局</h2>
+      <p data-en="Soundscape, Library, Sleep, bedside clock and Mine — real screenshots, swipe through." data-zh="声景 / 声音库 / 休息 / 床头钟 / 我的，均为真实截图，左右滑动查看。" data-zh-hant="聲景 / 聲音庫 / 休息 / 床頭鐘 / 我的，均為真實截圖，左右滑動檢視。">声景 / 声音库 / 休息 / 床头钟 / 我的，均为真实截图，左右滑动查看。</p>
+    </div>
+
+    <div class="strip">
+      <figure class="shot">
+        <img src="assets/screens/shot-play.png" loading="lazy" alt="声眠 Sonare — 声景页截图（播放中）">
+        <figcaption><b data-en="Soundscape · real-time spectrum" data-zh="声景 · 真实频谱" data-zh-hant="聲景 · 真實頻譜">声景 · 真实频谱</b><span data-en="Real screenshot — 56-bar FFT ring, playing state" data-zh="真实截图——56 根径向 FFT 频谱与播放状态" data-zh-hant="真實截圖——56 根徑向 FFT 頻譜與播放狀態">真实截图——56 根径向 FFT 频谱与播放状态</span></figcaption>
+      </figure>
+
+      <figure class="shot">
+        <img src="assets/screens/shot-library.png" loading="lazy" alt="声眠 Sonare — 声音库截图">
+        <figcaption><b data-en="Library · five noises" data-zh="声音库 · 五种噪音" data-zh-hant="聲音庫 · 五種噪音">声音库 · 五种噪音</b><span data-en="Real screenshot — tap to play, the playing one lights up" data-zh="真实截图——点击即播，正在播放的高亮显示" data-zh-hant="真實截圖——點擊即播，正在播放的高亮顯示">真实截图——点击即播，正在播放的高亮显示</span></figcaption>
+      </figure>
+
+      <figure class="shot">
+        <img src="assets/screens/shot-sleep.png" loading="lazy" alt="声眠 Sonare — 休息页截图">
+        <figcaption><b data-en="Sleep · timer &amp; bedside clock" data-zh="休息 · 定时与床头钟" data-zh-hant="休息 · 定時與床頭鐘">休息 · 定时与床头钟</b><span data-en="Real screenshot — 15–60 min, fade over the last 5 minutes" data-zh="真实截图——15–60 分钟，最后 5 分钟渐弱" data-zh-hant="真實截圖——15–60 分鐘，最後 5 分鐘漸弱">真实截图——15–60 分钟，最后 5 分钟渐弱</span></figcaption>
+      </figure>
+
+      <figure class="shot">
+        <img src="assets/screens/shot-clock.png" loading="lazy" alt="声眠 Sonare — 床头钟截图">
+        <figcaption><b data-en="Bedside clock · full screen" data-zh="床头钟 · 全屏时钟" data-zh-hant="床頭鐘 · 全螢幕時鐘">床头钟 · 全屏时钟</b><span data-en="Real screenshot — thin digits, three brightness levels" data-zh="真实截图——细体大字与三档亮度" data-zh-hant="真實截圖——細體大字與三檔亮度">真实截图——细体大字与三档亮度</span></figcaption>
+      </figure>
+
+      <figure class="shot">
+        <img src="assets/screens/shot-mine.png" loading="lazy" alt="声眠 Sonare — 我的页截图">
+        <figcaption><b data-en="Mine · free, local, transparent" data-zh="我的 · 免费、本地、透明" data-zh-hant="我的 · 免費、本地、透明">我的 · 免费、本地、透明</b><span data-en="Real screenshot — local stats, three themes, privacy notes" data-zh="真实截图——本机统计、三套主题与隐私说明" data-zh-hant="真實截圖——本機統計、三套主題與隱私說明">真实截图——本机统计、三套主题与隐私说明</span></figcaption>
+      </figure>
+    </div>
+    <div class="hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      <span data-en="Swipe / scroll horizontally" data-zh="左右滑动查看更多" data-zh-hant="左右滑動檢視更多">左右滑动查看更多</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="privacy">
+  <div class="wrap">
+    <div class="priv-grid">
+      <div class="reveal">
+        <div class="eyebrow"><span data-en="Privacy" data-zh="隐私" data-zh-hant="隱私">隐私</span></div>
+        <h2 style="font-size:clamp(1.85rem,3.1vw,2.5rem);letter-spacing:-.03em;line-height:1.2;margin-bottom:.85rem" data-en="One sentence: <em style=&quot;font-style:normal&quot;>we collect nothing.</em>" data-zh="一句话版本：<em style=&quot;font-style:normal&quot;>我们不收集任何数据。</em>" data-zh-hant="一句話版本：<em style=&quot;font-style:normal&quot;>我們不收集任何數據。</em>">一句话版本：<em style="font-style:normal">我们不收集任何数据。</em></h2>
+        <p style="color:var(--dim);font-size:1rem" data-en="No accounts, no analytics, no ads, no network requests, no system permissions. Your settings and stats live in local storage on this device only — uninstalling removes everything, and there is no cloud copy." data-zh="没有账号、没有埋点、没有广告、没有任何网络请求，也不申请任何系统权限。设置与使用统计只保存在这台设备的本地存储里——卸载即全部删除，没有任何云端副本。" data-zh-hant="沒有帳號、沒有埋點、沒有廣告、沒有任何網絡請求，也不申請任何系統權限。設定與使用統計只保存在這台裝置的本地儲存裡——卸載即全部刪除，沒有任何雲端副本。">没有账号、没有埋点、没有广告、没有任何网络请求，也不申请任何系统权限。设置与使用统计只保存在这台设备的本地存储里——卸载即全部删除，没有任何云端副本。</p>
+        <ul class="check-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg><span data-en="No personal, device or location data collected" data-zh="不收集个人信息、设备信息或位置信息" data-zh-hant="不收集個人信息、設備信息或位置信息">不收集个人信息、设备信息或位置信息</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg><span data-en="No network requests — the app never connects to a server" data-zh="无任何网络请求，不连接任何服务器" data-zh-hant="無任何網絡請求，不連接任何服務器">无任何网络请求，不连接任何服务器</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg><span data-en="No ads, no analytics, no trackers" data-zh="无广告 SDK、无统计分析、无追踪器" data-zh-hant="無廣告 SDK、無統計分析、無追蹤器">无广告 SDK、无统计分析、无追踪器</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg><span data-en="No permissions — no microphone, photos, location or notifications" data-zh="不申请麦克风、相册、定位、通知等任何系统权限" data-zh-hant="不申請麥克風、相簿、定位、通知等任何系統權限">不申请麦克风、相册、定位、通知等任何系统权限</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg><span data-en="Uninstall to delete everything; no cloud sync" data-zh="卸载或清除数据即删除全部记录，不提供云同步" data-zh-hant="卸載或清除數據即刪除全部記錄，不提供雲端同步">卸载或清除数据即删除全部记录，不提供云同步</span></li>
+        </ul>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="private/privacy_policy.html"><span data-en="Read the privacy policy" data-zh="阅读隐私政策" data-zh-hant="閱讀隱私政策">阅读隐私政策</span></a>
+          <a class="btn btn-ghost" href="private/terms_of_service.html"><span data-en="Terms of service" data-zh="用户协议" data-zh-hant="用戶協議">用户协议</span></a>
+        </div>
+      </div>
+      <div class="priv-shot reveal">
+        <div class="glow" style="width:400px;height:400px"></div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="phone-screen">
+            <img src="assets/screens/mine.png" alt="声眠 Sonare — 我的页（真实截图）">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" id="faq" style="border-top:1px solid var(--stroke);background:linear-gradient(180deg,rgba(255,255,255,.02),transparent 70%)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span data-en="FAQ" data-zh="常见问题" data-zh-hant="常見問題">常见问题</span></div>
+      <h2 data-en="Before you press play" data-zh="按下播放之前的几个问题" data-zh-hant="按下播放之前的幾個問題">按下播放之前的几个问题</h2>
+    </div>
+
+    <div class="faq">
+      <details class="reveal" open>
+        <summary data-en="Does it need an internet connection?" data-zh="使用需要联网吗？" data-zh-hant="使用需要連網嗎？">使用需要联网吗？</summary>
+        <p data-en="No. Every noise is synthesized on the device in real time — it works in airplane mode, and it never downloads audio files." data-zh="不需要。所有噪音都在设备上实时合成，飞行模式照常使用，也从不需要下载任何音频文件。" data-zh-hant="不需要。所有噪音都在裝置上即時合成，飛行模式照常使用，也從不需要下載任何音頻文件。">不需要。所有噪音都在设备上实时合成，飞行模式照常使用，也从不需要下载任何音频文件。</p>
+      </details>
+
+      <details class="reveal">
+        <summary data-en="Do you collect any of my data?" data-zh="会收集我的数据吗？" data-zh-hant="會收集我的數據嗎？">会收集我的数据吗？</summary>
+        <p data-en="No. There is no account system, no analytics, no advertising SDK and no network requests. Settings, themes and usage stats stay in local storage on your device." data-zh="不会。没有账号系统、没有埋点、没有广告 SDK，也没有任何网络请求。设置、外观与使用统计都只保存在设备本地。" data-zh-hant="不會。沒有帳號系統、沒有埋點、沒有廣告 SDK，也沒有任何網絡請求。設定、外觀與使用統計都只保存在裝置本地。">不会。没有账号系统、没有埋点、没有广告 SDK，也没有任何网络请求。设置、外观与使用统计都只保存在设备本地。</p>
+      </details>
+
+      <details class="reveal">
+        <summary data-en="Why can't I hear the binaural beat?" data-zh="为什么听不出双耳节拍？" data-zh-hant="為什麼聽不出雙耳節拍？">为什么听不出双耳节拍？</summary>
+        <p data-en="The beat lives in the tiny difference between the two ears: a 200 Hz carrier in the left, 202/205/210 Hz in the right. Stereo headphones are required — regular speakers mix both channels together. If your device cannot pan audio, the app will tell you and turn the feature off." data-zh="节拍藏在两只耳朵的差异里：左耳 200 Hz 载波，右耳 202 / 205 / 210 Hz。必须佩戴立体声耳机——普通外放会把两个声道混在一起。若设备不支持立体声声像，应用会提示并关闭该功能。" data-zh-hant="節拍藏在兩隻耳朵的差異裡：左耳 200 Hz 載波，右耳 202 / 205 / 210 Hz。必須佩戴立體聲耳機——普通外放會把兩個聲道混在一起。若裝置不支援立體聲聲像，應用會提示並關閉該功能。">节拍藏在两只耳朵的差异里：左耳 200 Hz 载波，右耳 202 / 205 / 210 Hz。必须佩戴立体声耳机——普通外放会把两个声道混在一起。若设备不支持立体声声像，应用会提示并关闭该功能。</p>
+      </details>
+
+      <details class="reveal">
+        <summary data-en="Can it track my sleep or wake me up?" data-zh="它能监测睡眠或叫醒我吗？" data-zh-hant="它能監測睡眠或叫醒我嗎？">它能监测睡眠或叫醒我吗？</summary>
+        <p data-en="No, and it never will pretend to. Sonare is a sound player with a timer — there is no sleep detection, no sleep report and no wake-up alarm. Binaural beats are an audio layering feature, not a claim about any physiological state, and nothing here is medical advice." data-zh="不能，而且它从不假装可以。声眠是一个带定时功能的声音播放工具——不含睡眠识别、睡眠报告或唤醒闹钟。双耳节拍只是声音叠加功能，不代表任何生理状态，也不构成医疗或健康建议。" data-zh-hant="不能，而且它從不假裝可以。聲眠是一個帶定時功能的聲音播放工具——不含睡眠識別、睡眠報告或喚醒鬧鐘。雙耳節拍只是聲音疊加功能，不代表任何生理狀態，也不構成醫療或健康建議。">不能，而且它从不假装可以。声眠是一个带定时功能的声音播放工具——不含睡眠识别、睡眠报告或唤醒闹钟。双耳节拍只是声音叠加功能，不代表任何生理状态，也不构成医疗或健康建议。</p>
+      </details>
+
+      <details class="reveal">
+        <summary data-en="Will the timer stop abruptly?" data-zh="定时结束后会突然停吗？" data-zh-hant="定時結束後會突然停嗎？">定时结束后会突然停吗？</summary>
+        <p data-en="No. The countdown runs on real playback time — pausing keeps the remaining time and switching sounds does not reset it. The last 5 minutes ramp the volume down, and at the end everything fades out over about a second." data-zh="不会。倒计时按真实播放时间进行——暂停保留剩余时间，切换声音不重置。最后 5 分钟音量逐渐降低，结束时全部声音平滑淡出。" data-zh-hant="不會。倒計時按真實播放時間進行——暫停保留剩餘時間，切換聲音不重置。最後 5 分鐘音量逐漸降低，結束時全部聲音平滑淡出。">不会。倒计时按真实播放时间进行——暂停保留剩余时间，切换声音不重置。最后 5 分钟音量逐渐降低，结束时全部声音平滑淡出。</p>
+      </details>
+
+      <details class="reveal">
+        <summary data-en="Which devices and languages are supported?" data-zh="支持哪些设备与语言？" data-zh-hant="支援哪些裝置與語言？">支持哪些设备与语言？</summary>
+        <p data-en="iPhone on iOS 13.0 or later, plus a web build from the same codebase. The interface follows the system language: Simplified Chinese, Traditional Chinese or English." data-zh="iPhone（iOS 13.0 或更高），另有同一套代码构建的 Web 调试版本。界面跟随系统语言：简体中文 / 繁體中文 / English。" data-zh-hant="iPhone（iOS 13.0 或更高），另有同一套代碼構建的 Web 調試版本。介面跟隨系統語言：簡體中文 / 繁體中文 / English。">iPhone（iOS 13.0 或更高），另有同一套代码构建的 Web 调试版本。界面跟随系统语言：简体中文 / 繁體中文 / English。</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="support" id="support">
+  <div class="wrap">
+    <div class="support-card reveal">
+      <h2 data-en="Need a hand?" data-zh="需要帮忙？" data-zh-hant="需要幫忙？">需要帮忙？</h2>
+      <p data-en="Tell us the sound, the screen and what happened — we usually reply within one working day." data-zh="告诉我们你用的声音、所在的页面和发生了什么，我们通常在一个工作日内回复。" data-zh-hant="告訴我們你用的聲音、所在的頁面和發生了什麼，我們通常在一個工作日內回覆。">告诉我们你用的声音、所在的页面和发生了什么，我们通常在一个工作日内回复。</p>
+      <div class="support-actions">
+        <a class="btn btn-primary" id="mail-btn" href="mailto:support@sonare.app">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5L12 13l8.5-6.5"/></svg>
+          <span data-en="Contact support" data-zh="联系技术支持" data-zh-hant="聯繫技術支援">联系技术支持</span>
+        </a>
+        <a class="btn btn-ghost" href="private/privacy_policy.html"><span data-en="Privacy policy" data-zh="隐私政策" data-zh-hant="隱私政策">隐私政策</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#" class="brand">
+          <img src="assets/logo.png" alt="Sonare 声眠">
+          <span class="word" data-en="Sonare" data-zh="声眠 <span>Sonare</span>" data-zh-hant="聲眠 <span>Sonare</span>">声眠 <span>Sonare</span></span>
+        </a>
+        <p data-en="Five locally synthesized noises, binaural beats, a fade timer and a bedside clock. Free, offline, ad-free — everything stays on your device." data-zh="五种本地合成噪音、双耳节拍、渐弱定时与床头钟。免费、离线、无广告——一切只发生在你的设备上。" data-zh-hant="五種本地合成噪音、雙耳節拍、漸弱定時與床頭鐘。免費、離線、無廣告——一切只發生在你的裝置上。">五种本地合成噪音、双耳节拍、渐弱定时与床头钟。免费、离线、无广告——一切只发生在你的设备上。</p>
+      </div>
+      <div class="foot-col">
+        <h4 data-en="Product" data-zh="产品" data-zh-hant="產品">产品</h4>
+        <a href="#sounds" data-en="Sounds" data-zh="五种噪音" data-zh-hant="五種噪音">五种噪音</a>
+        <a href="#tuning" data-en="Tuning" data-zh="声音调节" data-zh-hant="聲音調節">声音调节</a>
+        <a href="#timer" data-en="Timer &amp; clock" data-zh="定时与床头钟" data-zh-hant="定時與床頭鐘">定时与床头钟</a>
+        <a href="#faq" data-en="FAQ" data-zh="常见问题" data-zh-hant="常見問題">常见问题</a>
+      </div>
+      <div class="foot-col">
+        <h4 data-en="Legal" data-zh="法律" data-zh-hant="法律">法律</h4>
+        <a href="private/privacy_policy.html" data-en="Privacy Policy" data-zh="隐私政策" data-zh-hant="隱私政策">隐私政策</a>
+        <a href="private/terms_of_service.html" data-en="Terms of Service" data-zh="用户协议" data-zh-hant="用戶協議">用户协议</a>
+        <a href="mailto:support@sonare.app" data-en="Contact" data-zh="联系我们" data-zh-hant="聯繫我們">联系我们</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span data-en="© 2026 Sonare. All rights reserved." data-zh="© 2026 Sonare. 保留所有权利。" data-zh-hant="© 2026 Sonare. 保留所有權利。">© 2026 Sonare. 保留所有权利。</span>
+      <span data-en="Not medical advice · No sleep tracking · No ads" data-zh="非医疗建议 · 无睡眠监测 · 无广告" data-zh-hant="非醫療建議 · 無睡眠監測 · 無廣告">非医疗建议 · 无睡眠监测 · 无广告</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var LANGS = ['zh', 'zh-hant', 'en'];
+  var KEY = 'sonare-lang';
+
+  // 支持 ?lang=zh / zh-hant / zh-TW / zh-HK / en
+  function normalize(v) {
+    v = (v || '').toLowerCase();
+    if (v === 'en') return 'en';
+    if (v === 'zh' || v === 'zh-cn' || v === 'zh-hans') return 'zh';
+    if (v.indexOf('hant') > 0 || v.indexOf('-tw') > 0 || v.indexOf('-hk') > 0 || v.indexOf('-mo') > 0) return 'zh-hant';
+    if (v.indexOf('zh') === 0) return 'zh';
+    return null;
+  }
+
+  var lang = normalize(new URLSearchParams(location.search).get('lang'))
+    || normalize(localStorage.getItem(KEY))
+    || normalize(navigator.language)
+    || 'zh';
+  localStorage.setItem(KEY, lang);
+
+  function apply(l) {
+    document.documentElement.lang = l === 'zh' ? 'zh-CN' : l === 'zh-hant' ? 'zh-TW' : 'en';
+
+    document.querySelectorAll('[data-en]').forEach(function (el) {
+      if (el.tagName === 'TITLE') return;
+      var v = el.getAttribute('data-' + l);
+      if (v !== null) el.innerHTML = v;
+    });
+
+    var title = document.querySelector('title');
+    if (title) {
+      var t = title.getAttribute('data-' + l);
+      if (t) title.textContent = t;
+    }
+
+    var NAMES = { zh: '简体', 'zh-hant': '繁體', en: 'EN' };
+    var TIPS = {
+      zh: '当前语言：简体中文 · 点击切换为繁體',
+      'zh-hant': '當前語言：繁體中文 · 點擊切換為 English',
+      en: 'Language: English · click to switch to 简体中文'
+    };
+    var label = document.getElementById('lang-label') || document.getElementById('lang-toggle');
+    if (label) label.textContent = NAMES[l];
+    var lb = document.getElementById('lang-toggle');
+    if (lb) { lb.title = TIPS[l]; lb.setAttribute('aria-label', TIPS[l]); }
+
+    // 邮件按钮：地址藏在 href 里，点击直接调起邮件客户端
+    var SUBJ = {
+      zh: '[声眠 Sonare] 支持请求',
+      'zh-hant': '[聲眠 Sonare] 支援請求',
+      en: '[Sonare] support request'
+    };
+    var mb = document.getElementById('mail-btn');
+    if (mb) mb.href = 'mailto:support@sonare.app?subject=' + encodeURIComponent(SUBJ[l]);
+  }
+
+  window.toggleLanguage = function () {
+    lang = LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length];
+    localStorage.setItem(KEY, lang);
+    apply(lang);
+  };
+
+  apply(lang);
+
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
+  }
+})();
+</script>
+</body>
+</html>

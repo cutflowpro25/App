@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#06080F">
+<script>
+  /* App 内嵌（?embed=1）时立刻隐藏站点顶栏，避免首帧闪烁 */
+  if (new URLSearchParams(location.search).get('embed') === '1') {
+    document.documentElement.classList.add('embed');
+  }
+</script>
+<title data-en="Privacy Policy — Sonare" data-zh="隐私政策 — 声眠 Sonare" data-zh-hant="隱私政策 — 聲眠 Sonare">隐私政策 — 声眠 Sonare</title>
+<link rel="icon" href="../assets/logo.png">
+<style>
+  :root{
+    /* 与 lib/ui/palette.dart AppPalette.night（夜航）一致 */
+    --bg:#06080F;--surface:#10172A;--surface2:#17213A;--border:#29334E;
+    --text:#EDF0FF;--dim:#A1AECF;--faint:#8997BA;
+    --primary:#AD9AFF;--primary-2:#7053DB;--mint:#70DEC5;--moon:#FFD09C;
+    --stroke:rgba(173,154,255,.14);--panel:#10172A;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:
+      radial-gradient(800px 420px at 85% -10%,rgba(173,154,255,.14),transparent 62%),
+      radial-gradient(600px 400px at 5% 0%,rgba(112,222,197,.06),transparent 60%),
+      var(--bg);
+    color:var(--text);line-height:1.75;-webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--primary);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .topbar{
+    position:sticky;top:0;z-index:10;
+    backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    background:rgba(6,8,15,.82);border-bottom:1px solid var(--stroke);
+  }
+  .topbar-inner{
+    max-width:860px;margin:0 auto;padding:.8rem 1.5rem;
+    display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  }
+  .back{display:inline-flex;align-items:center;gap:.5rem;color:var(--dim);font-size:.88rem;font-weight:500}
+  .back:hover{color:var(--text);text-decoration:none}
+  .back img{width:26px;height:26px;border-radius:7px}
+  /* 内嵌到 App 的 WebView 时隐藏站点顶栏（App 自带返回与标题） */
+  html.embed .topbar{display:none}
+  html.embed main{padding:1.6rem 1.15rem 3rem}
+  @media (max-width:430px){
+    html.embed main{padding:1.15rem 1.05rem 2.5rem}
+    html.embed h1{font-size:1.7rem}
+  }
+  .lang-btn{
+    font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;
+    color:var(--dim);background:transparent;border:1px solid var(--stroke);
+    padding:.42rem .85rem;border-radius:99px;cursor:pointer;transition:.2s;
+  }
+  .lang-btn:hover{color:var(--text);border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.04)}
+  main{max-width:860px;margin:0 auto;padding:3.25rem 1.5rem 4rem}
+  .kicker{
+    display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--primary);background:rgba(173,154,255,.12);border:1px solid rgba(173,154,255,.26);
+    padding:.3rem .7rem;border-radius:99px;margin-bottom:1rem;
+  }
+  h1{font-size:clamp(1.9rem,4vw,2.6rem);letter-spacing:-.03em;line-height:1.15;margin-bottom:.6rem}
+  .updated{color:var(--faint);font-size:.85rem;font-family:var(--mono);margin-bottom:2.25rem}
+  .card{
+    background:var(--panel);border:1px solid var(--stroke);border-radius:16px;
+    padding:1.6rem 1.75rem;margin-bottom:1.75rem;
+  }
+  .card p{color:var(--dim);font-size:.95rem;margin-bottom:.85rem}
+  .card p:last-child{margin-bottom:0}
+  .card b{color:var(--text);font-weight:600}
+  .ok{border-color:rgba(112,222,197,.28);background:rgba(112,222,197,.06)}
+  .ok b{color:var(--mint)}
+  h2{
+    font-size:1.08rem;letter-spacing:-.01em;margin:2.1rem 0 .75rem;
+    display:flex;align-items:center;gap:.6rem;font-weight:650;
+  }
+  h2::before{content:"";width:3px;height:1.05rem;border-radius:2px;background:linear-gradient(180deg,#AD9AFF,#7053DB)}
+  p{color:var(--dim);font-size:.95rem;margin-bottom:.85rem}
+  ul{margin:.25rem 0 .9rem 1.1rem;color:var(--dim);font-size:.95rem}
+  li{margin-bottom:.4rem}
+  .mail-btn{
+    display:inline-flex;align-items:center;gap:.55rem;margin-top:.5rem;
+    font-size:.92rem;font-weight:600;color:var(--primary);text-decoration:none;
+    background:rgba(173,154,255,.1);border:1px solid rgba(173,154,255,.24);
+    padding:.62rem 1.15rem;border-radius:999px;
+    transition:background .18s ease,border-color .18s ease,transform .18s ease;
+  }
+  .mail-btn:hover{text-decoration:none;background:rgba(173,154,255,.18);
+    border-color:rgba(173,154,255,.44);transform:translateY(-1px)}
+  .mail-btn svg{width:17px;height:17px}
+  footer{
+    border-top:1px solid var(--stroke);margin-top:2.5rem;padding-top:1.25rem;
+    display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+    font-size:.8rem;color:var(--faint);
+  }
+  footer a{color:var(--dim);font-size:.8rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="back" href="../index.html">
+      <img src="../assets/logo.png" alt="">
+      <span data-en="← Back to Sonare" data-zh="← 返回声眠官网" data-zh-hant="← 返回聲眠官網">← 返回声眠官网</span>
+    </a>
+    <button class="lang-btn" id="lang-toggle" onclick="toggleLanguage()">简体</button>
+  </div>
+</div>
+
+<main>
+  <div class="kicker" data-en="Legal" data-zh="法律文件" data-zh-hant="法律文件">法律文件</div>
+  <h1 data-en="Privacy Policy" data-zh="隐私政策" data-zh-hant="隱私政策">隐私政策</h1>
+  <div class="updated" data-en="Last updated: October 22, 2026" data-zh="最后更新：2026 年 10 月 22 日" data-zh-hant="最後更新：2026 年 10 月 22 日">最后更新：2026 年 10 月 22 日</div>
+
+  <div class="card ok">
+    <p data-en="<b>Sonare</b> (Chinese title: 声眠 / 聲眠, “we”, “our” or “us”) is a white-noise app that runs entirely on your device. This policy explains what happens to your information when you use our mobile application (the “App”). In plain terms: <b>we collect no data at all.</b>" data-zh="<b>声眠</b>（Sonare，“我们”或“我们的”）是一款完全在你的设备上运行的白噪音应用。本政策说明当您使用我们的移动应用程序（以下简称“本应用”）时，您的信息将如何被处理。一句话版本：<b>我们不收集任何数据。</b>" data-zh-hant="<b>聲眠</b>（Sonare，“我們”或“我們的”）是一款完全在你的裝置上運行的白噪音應用。本政策說明當您使用我們的流動應用程式（以下簡稱“本應用程式”）時，您的資訊將如何被處理。一句話版本：<b>我們不收集任何數據。</b>"><b>声眠</b>（Sonare，“我们”或“我们的”）是一款完全在你的设备上运行的白噪音应用。本政策说明当您使用我们的移动应用程序（以下简称“本应用”）时，您的信息将如何被处理。一句话版本：<b>我们不收集任何数据。</b></p>
+    <p data-en="On first launch the App shows a summary of this policy and the Terms of Service once; after you agree you go straight to the player, and nothing else is ever asked of you." data-zh="首次启动时，应用会展示一次本政策与《用户协议》的摘要；您同意后即直接进入播放页，此后不会再向您索要任何东西。" data-zh-hant="首次啟動時，應用程式會展示一次本政策與《用戶協議》的摘要；您同意後即直接進入播放頁，此後不會再向您索取任何東西。">首次启动时，应用会展示一次本政策与《用户协议》的摘要；您同意后即直接进入播放页，此后不会再向您索要任何东西。</p>
+  </div>
+
+  <h2 data-en="1. Information Collection and Use" data-zh="1. 信息收集与使用" data-zh-hant="1. 信息收集與使用">1. 信息收集与使用</h2>
+  <p data-en="The App is designed to be fully offline. We do not collect your name, email address, phone number, location, contacts, device identifiers, advertising identifiers, usage statistics, crash reports — or anything else. There is no account system, no sign-in and no registration." data-zh="本应用以完全离线为设计原则。我们不收集您的姓名、电子邮箱、电话号码、位置、通讯录、设备标识符、广告标识符、使用统计、崩溃报告——或任何其他信息。本应用没有账号系统，不支持也不需要登录或注册。" data-zh-hant="本應用程式以完全離線為設計原則。我們不收集您的姓名、電子郵箱、電話號碼、位置、通訊錄、設備標識符、廣告標識符、使用統計、崩潰報告——或任何其他資訊。本應用程式沒有帳號系統，不支援也不需要登入或註冊。">本应用以完全离线为设计原则。我们不收集您的姓名、电子邮箱、电话号码、位置、通讯录、设备标识符、广告标识符、使用统计、崩溃报告——或任何其他信息。本应用没有账号系统，不支持也不需要登录或注册。</p>
+  <p data-en="Your volume, pan, drift, pitch, timer, appearance theme and usage counters (days visited, play sessions) are stored <b>only in local storage on your device</b> through standard platform capabilities (SharedPreferences on iOS). They never leave your device, we cannot see them, and they are not shared with anyone." data-zh="您的音量、声场位置、变化幅度、音调、定时、外观主题与使用计数（访问天数、播放会话）仅通过平台标准能力（iOS 上的 SharedPreferences）保存在<b>本设备的本地存储</b>中。这些数据不出您的设备，我们看不到，也不会与任何人共享。" data-zh-hant="您的音量、聲場位置、變化幅度、音調、定時、外觀主題與使用計數（訪問天數、播放會話）僅通過平台標準能力（iOS 上的 SharedPreferences）保存在<b>本裝置的本地儲存</b>中。這些數據不出您的裝置，我們看不到，也不會與任何人共享。">您的音量、声场位置、变化幅度、音调、定时、外观主题与使用计数（访问天数、播放会话）仅通过平台标准能力（iOS 上的 SharedPreferences）保存在<b>本设备的本地存储</b>中。这些数据不出您的设备，我们看不到，也不会与任何人共享。</p>
+  <p data-en="All sounds are synthesized locally in real time. The App never downloads, streams or caches audio content." data-zh="所有声音均在本地实时合成。本应用不会下载、串流或缓存任何音频内容。" data-zh-hant="所有聲音均在本地即時合成。本應用程式不會下載、串流或快取任何音頻內容。">所有声音均在本地实时合成。本应用不会下载、串流或缓存任何音频内容。</p>
+
+  <h2 data-en="2. Network and Permissions" data-zh="2. 网络与设备权限" data-zh-hant="2. 網絡與裝置權限">2. 网络与设备权限</h2>
+  <p data-en="The App makes <b>no network requests at all</b> and never connects to a server. It does not request camera, microphone, photo library, contacts, location or notification access. The only system capability it uses is background audio playback (UIBackgroundModes=audio), which exists solely so the sound keeps playing when the screen is locked or the app is in the background; enabling it does not trigger any permission prompt." data-zh="本应用<b>不发起任何网络请求</b>，不连接任何服务器。不申请相机、麦克风、相册、通讯录、定位或通知权限。它使用的唯一系统能力是后台音频播放（UIBackgroundModes=audio），目的仅在于锁屏或切到后台时声音可以继续播放；启用该能力不会触发任何权限弹窗。" data-zh-hant="本應用程式<b>不發起任何網絡請求</b>，不連接任何服務器。不申請相機、麥克風、相簿、通訊錄、定位或通知權限。它使用的唯一系統能力是背景音頻播放（UIBackgroundModes=audio），目的僅在於鎖屏或切到背景時聲音可以繼續播放；啟用該能力不會觸發任何權限彈窗。">本应用<b>不发起任何网络请求</b>，不连接任何服务器。不申请相机、麦克风、相册、通讯录、定位或通知权限。它使用的唯一系统能力是后台音频播放（UIBackgroundModes=audio），目的仅在于锁屏或切到后台时声音可以继续播放；启用该能力不会触发任何权限弹窗。</p>
+
+  <h2 data-en="3. Third-Party Services" data-zh="3. 第三方服务" data-zh-hant="3. 第三方服務">3. 第三方服务</h2>
+  <p data-en="The App does not integrate any third-party analytics, advertising or tracking SDK. The audio synthesis and local storage libraries it uses perform no network communication and collect no data. Legal pages such as this one may be displayed in an embedded web view; those pages are static documents that do not set tracking cookies or identify you." data-zh="本应用未集成任何第三方统计、广告或追踪 SDK。其使用的音频合成与本地存储相关程序库均不进行网络通信、不收集数据。本政策等法律页面可能通过内嵌网页展示，这些页面为静态文档，不设置追踪 Cookie，也不会识别您的身份。" data-zh-hant="本應用程式未集成任何第三方統計、廣告或追蹤 SDK。其使用的音頻合成與本地存儲相關程式庫均不進行網絡通訊、不收集數據。本政策等法律頁面可能通過內嵌網頁展示，這些頁面為靜態文檔，不設置追蹤 Cookie，也不會識別您的身份。">本应用未集成任何第三方统计、广告或追踪 SDK。其使用的音频合成与本地存储相关程序库均不进行网络通信、不收集数据。本政策等法律页面可能通过内嵌网页展示，这些页面为静态文档，不设置追踪 Cookie，也不会识别您的身份。</p>
+
+  <h2 data-en="4. Data Security and Deletion" data-zh="4. 数据安全与删除" data-zh-hant="4. 數據安全與刪除">4. 数据安全与删除</h2>
+  <p data-en="Because all data stays on your device, its security depends on the security of that device. We recommend enabling a screen lock and keeping your system up to date." data-zh="由于所有数据都保存在您的设备上，其安全性取决于设备本身的安全性。建议开启锁屏密码并及时更新系统。" data-zh-hant="由於所有數據都保存在您的裝置上，其安全性取決於裝置本身的安全性。建議開啟鎖屏密碼並及時更新系統。">由于所有数据都保存在您的设备上，其安全性取决于设备本身的安全性。建议开启锁屏密码并及时更新系统。</p>
+  <p data-en="Uninstalling the App or clearing its data removes every local record. There is no cloud copy and nothing to recover — which also means there is nothing to leak." data-zh="卸载本应用或清除其数据即删除全部本地记录。没有云端副本，也无可恢复——这也意味着没有东西可以泄露。" data-zh-hant="卸載本應用程式或清除其數據即刪除全部本地記錄。沒有雲端副本，也無可恢復——這也意味著沒有東西可以洩露。">卸载本应用或清除其数据即删除全部本地记录。没有云端副本，也无可恢复——这也意味着没有东西可以泄露。</p>
+
+  <h2 data-en="5. Children’s Privacy" data-zh="5. 儿童隐私" data-zh-hant="5. 兒童隱私">5. 儿童隐私</h2>
+  <p data-en="The App is suitable for all ages, and because no data is collected, there is no children’s data issue." data-zh="本应用适合所有年龄段使用，且由于不收集任何数据，不存在儿童数据问题。" data-zh-hant="本應用程式適合所有年齡段使用，且由於不收集任何數據，不存在兒童數據問題。">本应用适合所有年龄段使用，且由于不收集任何数据，不存在儿童数据问题。</p>
+
+  <h2 data-en="6. Changes to This Policy" data-zh="6. 政策变更" data-zh-hant="6. 政策變更">6. 政策变更</h2>
+  <p data-en="We may update this policy from time to time. Any change will be published on this page together with a new “last updated” date. As long as the App stays offline and collects nothing, this promise stands." data-zh="我们可能不时更新本政策。任何变更都会发布在本页面，并更新“最后更新”日期。只要本应用保持离线且不收集任何数据，本承诺即保持不变。" data-zh-hant="我們可能不時更新本政策。任何變更都會發布在本頁面，並更新「最後更新」日期。只要本應用程式保持離線且不收集任何數據，本承諾即保持不變。">我们可能不时更新本政策。任何变更都会发布在本页面，并更新“最后更新”日期。只要本应用保持离线且不收集任何数据，本承诺即保持不变。</p>
+
+  <h2 data-en="7. Contact Us" data-zh="7. 联系我们" data-zh-hant="7. 聯繫我們">7. 联系我们</h2>
+  <p data-en="If you have any question or suggestion about this Privacy Policy, please write to us:" data-zh="如果您对本隐私政策有任何疑问或建议，欢迎通过以下方式联系我们：" data-zh-hant="如果您對本隱私政策有任何疑問或建議，歡迎通過以下方式聯繫我們：">如果您对本隐私政策有任何疑问或建议，欢迎通过以下方式联系我们：</p>
+  <a class="mail-btn" id="mail-btn" href="mailto:support@sonare.app">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5L12 13l8.5-6.5"/></svg>
+    <span data-en="Email support" data-zh="发送邮件联系我们" data-zh-hant="發送郵件聯繫我們">发送邮件联系我们</span>
+  </a>
+
+  <footer>
+    <span data-en="© 2026 Sonare. All rights reserved." data-zh="© 2026 Sonare. 保留所有权利。" data-zh-hant="© 2026 Sonare. 保留所有權利。">© 2026 Sonare. 保留所有权利。</span>
+    <a href="terms_of_service.html" data-en="Terms of Service →" data-zh="用户协议 →" data-zh-hant="用戶協議 →">用户协议 →</a>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var LANGS = ['zh', 'zh-hant', 'en'];
+  var KEY = 'sonare-lang';
+
+  // 支持 ?lang=zh / zh-hant / zh-TW / zh-HK / en
+  function normalize(v) {
+    v = (v || '').toLowerCase();
+    if (v === 'en') return 'en';
+    if (v === 'zh' || v === 'zh-cn' || v === 'zh-hans') return 'zh';
+    if (v.indexOf('hant') > 0 || v.indexOf('-tw') > 0 || v.indexOf('-hk') > 0 || v.indexOf('-mo') > 0) return 'zh-hant';
+    if (v.indexOf('zh') === 0) return 'zh';
+    return null;
+  }
+
+  var lang = normalize(new URLSearchParams(location.search).get('lang'))
+    || normalize(localStorage.getItem(KEY))
+    || normalize(navigator.language)
+    || 'zh';
+  localStorage.setItem(KEY, lang);
+
+  function apply(l) {
+    document.documentElement.lang = l === 'zh' ? 'zh-CN' : l === 'zh-hant' ? 'zh-TW' : 'en';
+    document.querySelectorAll('[data-en]').forEach(function (el) {
+      if (el.tagName === 'TITLE') return;
+      var v = el.getAttribute('data-' + l);
+      if (v !== null) el.innerHTML = v;
+    });
+    var title = document.querySelector('title');
+    if (title) {
+      var t = title.getAttribute('data-' + l);
+      if (t) title.textContent = t;
+    }
+    var NAMES = { zh: '简体', 'zh-hant': '繁體', en: 'EN' };
+    var TIPS = {
+      zh: '当前语言：简体中文 · 点击切换为繁體',
+      'zh-hant': '當前語言：繁體中文 · 點擊切換為 English',
+      en: 'Language: English · click to switch to 简体中文'
+    };
+    var label = document.getElementById('lang-label') || document.getElementById('lang-toggle');
+    if (label) label.textContent = NAMES[l];
+    var lb = document.getElementById('lang-toggle');
+    if (lb) { lb.title = TIPS[l]; lb.setAttribute('aria-label', TIPS[l]); }
+
+    var SUBJ = {
+      zh: '[声眠 Sonare] 隐私政策咨询',
+      'zh-hant': '[聲眠 Sonare] 隱私政策諮詢',
+      en: '[Sonare] privacy inquiry'
+    };
+    var mb = document.getElementById('mail-btn');
+    if (mb) mb.href = 'mailto:support@sonare.app?subject=' + encodeURIComponent(SUBJ[l]);
+  }
+
+  window.toggleLanguage = function () {
+    lang = LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length];
+    localStorage.setItem(KEY, lang);
+    apply(lang);
+  };
+
+  apply(lang);
+})();
+</script>
+</body>
+</html>
