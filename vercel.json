@@ -1,3 +1,13 @@
 {
-  "trailingSlash": true
+  "trailingSlash": true,
+  "redirects": [
+    { "source": "/HeartRate", "destination": "/heartrate/", "permanent": true },
+    { "source": "/HeartRate/:path*", "destination": "/heartrate/:path*", "permanent": true },
+    { "source": "/MyOutFit", "destination": "/myoutfit/", "permanent": true },
+    { "source": "/MyOutFit/:path*", "destination": "/myoutfit/:path*", "permanent": true },
+    { "source": "/Sonare", "destination": "/sonare/", "permanent": true },
+    { "source": "/Sonare/:path*", "destination": "/sonare/:path*", "permanent": true },
+    { "source": "/cutflowPro", "destination": "/cutflowpro/", "permanent": true },
+    { "source": "/cutflowPro/:path*", "destination": "/cutflowpro/:path*", "permanent": true }
+  ]
 }
